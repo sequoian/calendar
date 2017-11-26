@@ -22,6 +22,10 @@ class EventRepository {
       SELECT * FROM events WHERE id = $1
     `, id)
   }
+
+  clearTable() {
+    return this.db.none('TRUNCATE TABLE events CASCADE')
+  }
 }
 
 module.exports = EventRepository

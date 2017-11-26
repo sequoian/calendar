@@ -8,8 +8,8 @@ const moe = {
 }
 
 describe('user repo', () => {
-  before('clear users', async () => {
-    await db.users.clearTable()
+  before('clear users', () => {
+    return db.users.clearTable()
   })
 
   let user
