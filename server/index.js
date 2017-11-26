@@ -2,10 +2,6 @@ require('dotenv').config()
 
 const db = require('./db')
 
-db.events.findById(1)
-  .then(result => {
-    console.log(result)
-  })
-  .catch(error => {
-    console.log(error)
-  })
+db.users.findById(1)
+  .then(r => console.log(r))
+  .catch(e => console.log(e))

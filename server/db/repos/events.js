@@ -6,7 +6,7 @@ class EventRepository {
   add(data) {
     return this.db.one(`
       INSERT INTO events (title, day, time, location, description, owner)
-      VALUES ($[title], $[day], $[time], $[location], $[description], $[owner]])
+      VALUES ($[title], $[day], $[time], $[location], $[description], $[owner])
       RETURNING *
     `, data)
   }

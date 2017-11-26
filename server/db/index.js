@@ -1,6 +1,7 @@
 const repos = require('./repos')
 const initOptions = {
   extend(obj) {
+    obj.users = new repos.Users(obj)
     obj.events = new repos.Events(obj)
   }
 }
