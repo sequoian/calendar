@@ -34,6 +34,14 @@ describe('events repo', () => {
     assert.isObject(result)
   })
 
+  it ('update event', async () => {
+    const newTime = '7:00'
+    const updated = Object.assign({}, event, {time: newTime})
+    event = await db.events.update(updated)
+    assert.isObject(event)
+    assert.strictEqual(event.time, newTime)
+  })
+
   it ('remove event', async () => {
     const result = await db.events.remove(event.id)
     assert.strictEqual(result, 1)

@@ -34,8 +34,8 @@ describe('user repo', () => {
 
   it ('update user', async () => {
     const newEmail = 'new@test.com'
-    const newUser = Object.assign({}, user, {email: newEmail})
-    user = await db.users.update(newUser)
+    const updated = Object.assign({}, user, {email: newEmail})
+    user = await db.users.update(updated)
     assert.isObject(user)
     assert.strictEqual(user.email, newEmail)
   })

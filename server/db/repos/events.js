@@ -11,6 +11,19 @@ class EventRepository {
     `, data)
   }
 
+  update(data) {
+    return this.db.oneOrNone(`
+      UPDATE events SET
+        title = $[title],
+        day = $[day],
+        time = $[time],
+        location = $[location],
+        description = $[description],
+        owner = $[owner]
+      WHERE id = $[id] RETURNING *
+    `, data)
+  }
+
   remove(id) {
     return this.db.result(`
       DELETE FROM events WHERE id = $1
