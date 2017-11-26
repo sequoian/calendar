@@ -1,8 +1,8 @@
 CREATE TABLE events (
   id            SERIAL PRIMARY KEY,
   title         text NOT NULL,
-  day           date NOT NULL,
-  time          time,
+  day           date,
+  time          text,
   location      text,
   description   text,
   owner         integer REFERENCES users ON DELETE CASCADE NOT NULL,
