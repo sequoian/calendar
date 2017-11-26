@@ -1,5 +1,3 @@
-require('dotenv').config()
-
 const db = require('./db')
 
 db.users.findById(1)

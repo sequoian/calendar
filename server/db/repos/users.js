@@ -22,6 +22,10 @@ class UserRepository {
       SELECT * FROM users WHERE id = $1
     `, id)
   }
+
+  clearTable() {
+    return this.db.none('TRUNCATE TABLE users CASCADE')
+  }
 }
 
 module.exports = UserRepository

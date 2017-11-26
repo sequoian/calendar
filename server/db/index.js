@@ -1,3 +1,4 @@
+require('dotenv').config()
 const repos = require('./repos')
 const initOptions = {
   extend(obj) {
