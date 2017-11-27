@@ -36,6 +36,12 @@ class EventRepository {
     `, id)
   }
 
+  findAllByUser(userId) {
+    return this.db.any(`
+      SELECT * FROM events WHERE owner = $1
+    `, userId)
+  }
+
   clearTable() {
     return this.db.none('TRUNCATE TABLE events CASCADE')
   }

@@ -9,6 +9,14 @@ const appt = {
   description: 'Do not be late',
 }
 
+const unscheduled = {
+  title: 'Clean car',
+  day: null,
+  time: null,
+  location: null,
+  description: null
+}
+
 const owner = {
   email: 'test',
   password: 'test',
@@ -19,7 +27,9 @@ describe('events repo', () => {
   before('clear events and add user', async () => {
     await db.events.clearTable()
     const user = await db.users.add(owner)
+    owner.id = user.id
     appt.owner = user.id
+    unscheduled.owner = user.id
   })
 
   let event
@@ -41,6 +51,12 @@ describe('events repo', () => {
     assert.isObject(event)
     assert.strictEqual(event.time, newTime)
   })
+  
+  it ('all user events', async () => {
+    await db.events.add(unscheduled)
+    const events = await db.events.findAllByUser(owner.id)
+    assert.lengthOf(events, 2)
+  })
 
   it ('remove event', async () => {
     const result = await db.events.remove(event.id)
@@ -49,7 +65,8 @@ describe('events repo', () => {
     assert.notExists(e, 'remove did not work correctly')
   })
 
-  after('clear users', () => {
-    return db.users.clearTable()
+  after('clear users', async () => {
+    await db.events.clearTable()
+    await db.users.clearTable()
   })
 })
