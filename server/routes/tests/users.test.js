@@ -52,11 +52,84 @@ describe ('user routes', () => {
   })
 
   describe ('POST /api/users/signup', () => {
+    const url = '/api/users/signup'
+    const reqbody = {
+      data: {
+        email: 'test@test.com',
+        password: 'testpassword',
+        confirmPass: 'testpassword'
+      }
+    }
 
+    it ('returns errors with no body', () => {
+      return request(app)
+        .post(url)
+        .expect(400)
+        .then(res => {
+          assert.property(res.body, 'errors')
+        })
+    })
+
+    it ('returns errors when a value is an incorrect type', () => {
+      const body = Object.assign({}, reqbody, {email: 12})
+      return request(app)
+        .post(url)
+        .send(body)
+        .expect(400)
+        .then(res => {
+          assert.property(res.body, 'errors')
+        })
+    })
+
+    it ('returns errors when email is invalid', () => {
+      const body = Object.assign({}, reqbody, {email: 'invalid'})
+      return request(app)
+        .post(url)
+        .send(body)
+        .expect(400)
+        .then(res => {
+          assert.property(res.body, 'errors')
+        })
+    })
+
+    it ('returns errors when password is not the correct length', () => {
+      const body = Object.assign({}, reqbody, {password: '123'})
+      return request(app)
+        .post(url)
+        .send(body)
+        .expect(400)
+        .then(res => {
+          assert.property(res.body, 'errors')
+        })
+    })
+
+    it ('returns errors with errors when passwords do not match', () => {
+      const body = Object.assign({}, reqbody, {confirmPass: 'different'})
+      return request(app)
+        .post(url)
+        .send(body)
+        .expect(400)
+        .then(res => {
+          assert.property(res.body, 'errors')
+        })
+    })
+
+    it ('returns 200 with data', () => {
+      return request(app)
+        .post(url)
+        .send(reqbody)
+        .expect(200)
+        .then(res => {
+          assert.property(res.body, 'data')
+        })
+    })
   })
 
   describe ('POST /api/users/login', () => {
-
+    it ('returns 400 with no body')
+    it ('returns errors when values are empty')
+    it ('returns errors when values are incorrect type')
+    it ('returns 200 with data')
   })
 
   describe ('POST /api/users/:id', () => {
