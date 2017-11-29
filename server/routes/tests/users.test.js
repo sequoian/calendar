@@ -119,7 +119,7 @@ describe ('user routes', () => {
         })
     })
 
-    it ('returns 200 with data', () => {
+    it ('returns 200 with user data', () => {
       return request(app)
         .post(url)
         .send(reqBody)
@@ -127,15 +127,66 @@ describe ('user routes', () => {
         .then(res => {
           assert.property(res.body, 'data')
           assert.property(res.body.data, 'user')
+          // check for jwt and csrf tokens
         })
     })
   })
 
   describe ('POST users/login', () => {
+    const url = '/api/users/login'
+    const reqBody = {
+      email: 'test@test.com',
+      password: 'testpassword'
+    }
+
     it ('requires csrf token')
-    it ('requires request body')
-    it ('validates body')
-    it ('returns 200 with data')
+
+    it ('requires request body', () => {
+      return request(app)
+        .post(url)
+        .expect(400)
+        .then(res => {
+          assert.property(res.body, 'errors')
+        })
+    })
+
+    it ('validates body', () => {
+      const body = Object.assign({}, reqBody, {email: ''})
+      return request(app)
+        .post(url)
+        .send(body)
+        .expect(400)
+        .then(res => {
+          assert.property(res.body, 'errors')
+        })
+    })
+
+    it ('returns errors when user is not in db', () => {
+      return request(app)
+        .post(url)
+        .send(reqBody)
+        .expect(400)
+        .then(res => {
+          assert.property(res.body, 'errors')
+        })
+    })
+
+    it ('returns 200 with user data', async () => {
+      await db.users.add({
+        name: null,
+        ...reqBody
+      })
+
+      return request(app)
+        .post(url)
+        .send(reqBody)
+        .expect(200)
+        .then(res => {
+          assert.property(res.body, 'data')
+          assert.property(res.body.data, 'user')
+          // check for jwt and csrf tokens
+        })
+    })
   })
 
   describe ('POST users/:id', () => {
