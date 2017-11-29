@@ -3,30 +3,36 @@ const assert = require('chai').assert
 const app = require('express')()
 const routes = require('..')
 const db = require('../../db')
+const bodyParser = require('body-parser')
+
+// Prepare app
+app.use(bodyParser.json())
 app.use('/', routes)
+
 
 describe ('user routes', () => {
   beforeEach('clear users', () => {
     return db.users.clearTable()
   })
 
-  describe ('GET /api/users', () => {
-    it ('returns 400 without params', (done) => {
-      request(app)
+  describe ('GET users', () => {
+
+    it ('returns 400 without params', () => {
+      return request(app)
         .get('/api/users')
-        .expect(400, done)
+        .expect(400)
     })
       
-    it ('returns 400 with invalid params', (done) => {
-      request(app)
+    it ('returns 400 with invalid params', () => {
+      return request(app)
         .get('/api/users?invalid=test')
-        .expect(400, done)
+        .expect(400)
     })
       
-    it ('returns 404 when email does not exist', (done) => {
-      request(app)
+    it ('returns 404 when email does not exist', () => {
+      return request(app)
         .get('/api/users?email=test@test.com')
-        .expect(404, done)
+        .expect(404)
     })
 
     it ('returns 204 when email exists', async () => {
@@ -43,7 +49,7 @@ describe ('user routes', () => {
     })
   })
 
-  describe ('GET /api/users/:id', () => {
+  describe ('GET users/:id', () => {
     it ('returns 404 when user does not exist')
     it ('returns 401 without authentication')
     it ('returns 401 with invalid authentication')
@@ -51,17 +57,16 @@ describe ('user routes', () => {
     it ('returns 200 with json when user exists')
   })
 
-  describe ('POST /api/users/signup', () => {
+  describe ('POST users/signup', () => {
     const url = '/api/users/signup'
-    const reqbody = {
-      data: {
-        email: 'test@test.com',
-        password: 'testpassword',
-        confirmPass: 'testpassword'
-      }
+    const reqBody = {
+      email: 'test@test.com',
+      password: 'testpassword'
     }
 
-    it ('returns errors with no body', () => {
+    it ('requires csrf token')
+
+    it ('requires body', () => {
       return request(app)
         .post(url)
         .expect(400)
@@ -70,8 +75,8 @@ describe ('user routes', () => {
         })
     })
 
-    it ('returns errors when a value is an incorrect type', () => {
-      const body = Object.assign({}, reqbody, {email: 12})
+    it ('validates body', () => {
+      const body = Object.assign({}, reqBody, {email: 'invalid'})
       return request(app)
         .post(url)
         .send(body)
@@ -81,66 +86,75 @@ describe ('user routes', () => {
         })
     })
 
-    it ('returns errors when email is invalid', () => {
-      const body = Object.assign({}, reqbody, {email: 'invalid'})
+    it ('returns errors on duplicate email', async () => {
+      await db.users.add({
+        email: reqBody.email,
+        password: 'testpassword',
+        name: 'jack'
+      })
+
       return request(app)
         .post(url)
-        .send(body)
+        .send(reqBody)
         .expect(400)
         .then(res => {
           assert.property(res.body, 'errors')
+          assert.property(res.body.errors, 'email')
         })
     })
 
-    it ('returns errors when password is not the correct length', () => {
-      const body = Object.assign({}, reqbody, {password: '123'})
+    it ('stores in database and hashes password', () => {
       return request(app)
         .post(url)
-        .send(body)
-        .expect(400)
+        .send(reqBody)
+        .expect(200)
         .then(res => {
-          assert.property(res.body, 'errors')
+          return db.users.findByEmail(reqBody.email)
         })
-    })
-
-    it ('returns errors with errors when passwords do not match', () => {
-      const body = Object.assign({}, reqbody, {confirmPass: 'different'})
-      return request(app)
-        .post(url)
-        .send(body)
-        .expect(400)
-        .then(res => {
-          assert.property(res.body, 'errors')
+        .then(user => {
+          assert.isObject(user, 'not stored in database')
+          // password should be a string and not an empty one
+          assert(user.password.length > 0, 'password not stored correctly')
+          assert.notEqual(user.password, reqBody.password, 'password not hashed')
         })
     })
 
     it ('returns 200 with data', () => {
       return request(app)
         .post(url)
-        .send(reqbody)
+        .send(reqBody)
         .expect(200)
         .then(res => {
           assert.property(res.body, 'data')
+          assert.property(res.body.data, 'user')
         })
     })
   })
 
-  describe ('POST /api/users/login', () => {
-    it ('returns 400 with no body')
-    it ('returns errors when values are empty')
-    it ('returns errors when values are incorrect type')
+  describe ('POST users/login', () => {
+    it ('requires csrf token')
+    it ('requires request body')
+    it ('validates body')
     it ('returns 200 with data')
   })
 
-  describe ('POST /api/users/:id', () => {
+  describe ('POST users/:id', () => {
 
   })
 
-  describe ('POST /api/users/:id/password', () => {
+  describe ('POST users/auth', () => {
+    
+  })
+
+  describe ('POST users/logout', () => {
 
   })
 
-  describe ('DELETE /api/users/:id', () => {
+  describe ('POST users/:id/password', () => {
+
+  })
+
+  describe ('DELETE /users/:id', () => {
     
   })
 })
