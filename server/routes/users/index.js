@@ -21,4 +21,9 @@ router.get('/users', async (req, res) => {
   }
 })
 
+// combine the other user routes
+router.use('/', [
+  require('./signup')
+])
+
 module.exports = router
