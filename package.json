@@ -17,8 +17,10 @@
   "dependencies": {
     "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
     "dotenv": "^4.0.0",
     "express": "^4.16.2",
+    "jsonwebtoken": "^8.1.0",
     "pg-promise": "^7.3.2"
   },
   "devDependencies": {

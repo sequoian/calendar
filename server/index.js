@@ -1,13 +1,17 @@
 const express = require('express')
 const path = require('path')
 const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
 const routes = require('./routes')
+require('dotenv').config()
 
 const app = express()
 const PORT = process.env.PORT || 5000
 
 // Parse POST data
 app.use(bodyParser.json())
+// Parse and sign cookies
+app.use(cookieParser(process.env.COOKIE_KEY))
 
 // Priority serve any static files.
 if (process.env.NODE_ENV === 'production') {

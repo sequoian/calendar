@@ -9,8 +9,14 @@ const validateInputs = async (req, res, next) => {
 
   if (!errors.email) {
     // test for duplicate email
-    if (await db.users.findByEmail(req.body.email)) {
-      errors.email = 'That email is already taken'
+    try {
+      const emailExists = await db.users.findByEmail(req.body.email.trim())
+      if (emailExists) {
+        errors.email = 'That email is already taken'
+      }
+    } catch (error) {
+      console.log(error)
+      return res.status(500).end()
     }
   }
 
@@ -30,10 +36,14 @@ const hashPassword = (req, res, next) => {
   const end = () => res.status(500).end()
 
   bcrypt.genSalt(saltRounds, (error, salt) => {
-    if (error) end()
+    if (error) {
+      return end()
+    }
 
     bcrypt.hash(password, salt, (error, hash) => {
-      if (error) end()
+      if (error) {
+        return end()
+      }
 
       req.body.hashedPassword = hash
       next()
@@ -43,7 +53,7 @@ const hashPassword = (req, res, next) => {
 
 const addUser = (req, res, next) => {
   const values = {
-    email: req.body.email,
+    email: req.body.email.trim(),
     password: req.body.hashedPassword,
     name: null
   }

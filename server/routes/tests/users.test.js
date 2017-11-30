@@ -4,9 +4,11 @@ const app = require('express')()
 const routes = require('..')
 const db = require('../../db')
 const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
 
 // Prepare app
 app.use(bodyParser.json())
+app.use(cookieParser(process.env.COOKIE_KEY))
 app.use('/', routes)
 
 
@@ -172,18 +174,19 @@ describe ('user routes', () => {
     })
 
     it ('returns 200 with user data', async () => {
-      await db.users.add({
-        name: null,
-        ...reqBody
-      })
+      await request(app)
+        .post('/api/users/signup')
+        .send(reqBody)
 
       return request(app)
         .post(url)
         .send(reqBody)
         .expect(200)
         .then(res => {
+          console.log(res.header['set-cookie'])
           assert.property(res.body, 'data')
-          assert.property(res.body.data, 'user')
+          assert.property(res.body.data, 'user', 'no user data')
+          assert.exists(res.header['set-cookie'], 'cookie not set')
           // TODO: check for jwt and csrf tokens
         })
     })
