@@ -127,7 +127,7 @@ describe ('user routes', () => {
         .then(res => {
           assert.property(res.body, 'data')
           assert.property(res.body.data, 'user')
-          // check for jwt and csrf tokens
+          // TODO: check for jwt and csrf tokens
         })
     })
   })
@@ -184,7 +184,7 @@ describe ('user routes', () => {
         .then(res => {
           assert.property(res.body, 'data')
           assert.property(res.body.data, 'user')
-          // check for jwt and csrf tokens
+          // TODO: check for jwt and csrf tokens
         })
     })
   })
@@ -194,7 +194,8 @@ describe ('user routes', () => {
   })
 
   describe ('POST users/auth', () => {
-    
+    it ('returns 401 with csrf token when user is not logged in')
+    it ('returns 204 with data and csrf token when user is logged in')
   })
 
   describe ('POST users/logout', () => {
