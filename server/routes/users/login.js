@@ -2,7 +2,7 @@ const router = require('express').Router()
 const db = require('../../db')
 const validate = require('../../validation').login
 const bcrypt = require('bcrypt')
-const jwt = require('./security/jwt')
+const jwt = require('../../security/jwt')
 
 const validateInputs = async (req, res, next) => {
   const errors = validate(req.body)
@@ -52,7 +52,7 @@ const authenticateInputs = async (req, res, next) => {
 
 const sendToken = async (req, res, next) => {
   const {user} = req.body
-  const token = jwt.createToken(user)
+  const token = jwt.createUserToken(user)
 
   res.cookie('user', token, jwt.cookieOptions)
 

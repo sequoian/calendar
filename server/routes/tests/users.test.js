@@ -183,7 +183,6 @@ describe ('user routes', () => {
         .send(reqBody)
         .expect(200)
         .then(res => {
-          console.log(res.header['set-cookie'])
           assert.property(res.body, 'data')
           assert.property(res.body.data, 'user', 'no user data')
           assert.exists(res.header['set-cookie'], 'cookie not set')
@@ -197,8 +196,29 @@ describe ('user routes', () => {
   })
 
   describe ('POST users/auth', () => {
-    it ('returns 401 with csrf token when user is not logged in')
-    it ('returns 204 with data and csrf token when user is logged in')
+    const url = '/api/users/auth'
+    const reqBody = {
+      email: 'test@test.com',
+      password: 'testpassword'
+    }
+
+    it ('returns 401 with csrf token when user is not logged in', () => {
+      return request(app)
+        .post(url)
+        .expect(401)
+    })
+    it ('returns 204 with data and csrf token when user is logged in', async () => {
+      const agent = request.agent(app)
+
+      await agent
+        .post('/api/users/signup')
+        .send(reqBody)
+        .expect(200)
+
+      return agent
+        .post(url)
+        .expect(204)
+    })
   })
 
   describe ('POST users/logout', () => {
