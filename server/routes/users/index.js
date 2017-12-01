@@ -24,7 +24,8 @@ router.get('/users', async (req, res) => {
 // combine the other user routes
 router.use('/', [
   require('./signup'),
-  require('./login')
+  require('./login'),
+  require('./auth')
 ])
 
 module.exports = router

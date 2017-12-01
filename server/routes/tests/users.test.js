@@ -129,6 +129,7 @@ describe ('user routes', () => {
         .then(res => {
           assert.property(res.body, 'data')
           assert.property(res.body.data, 'user')
+          assert.exists(res.header['set-cookie'], 'cookie not set')
           // TODO: check for jwt and csrf tokens
         })
     })
@@ -207,17 +208,24 @@ describe ('user routes', () => {
         .post(url)
         .expect(401)
     })
-    it ('returns 204 with data and csrf token when user is logged in', async () => {
-      const agent = request.agent(app)
 
-      await agent
+    it ('returns 200 with data and csrf token when user is logged in', async () => {
+      let cookie
+      await request(app)
         .post('/api/users/signup')
         .send(reqBody)
         .expect(200)
+        .then(res => {
+          cookie = res.header['set-cookie']
+        })
 
-      return agent
+      return request(app)
         .post(url)
-        .expect(204)
+        .set('Cookie', cookie)
+        .expect(200)
+        .then(res => {
+          assert.property(res.body, 'data')
+        })
     })
   })
 

@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const db = require('../../db')
 const validate = require('../../validation').signup
+const jwt = require('../../security/jwt')
 const bcrypt = require('bcrypt')
 const saltRounds = 10
 
@@ -51,29 +52,35 @@ const hashPassword = (req, res, next) => {
   })
 }
 
-const addUser = (req, res, next) => {
+const addUser = async (req, res, next) => {
   const values = {
     email: req.body.email.trim(),
     password: req.body.hashedPassword,
     name: null
   }
 
-  db.users.add(values)
-    .then(user => {
-      return res.status(200).json({
-        data: {
-          user: {
-            id: user.id,
-            email: user.email,
-            name: user.name
-          }
-        }
-      })
-    })
-    .catch(error => {
-      console.log(error)
-      return res.status(500).end()
-    })
+  // add user to db
+  let user
+  try {
+    user = await db.users.add(values)
+  } catch (error) {
+    console.log(error)
+    return res.status(500).end()
+  }
+  
+  // log user in
+  const token = jwt.createUserToken(user)
+  res.cookie('user', token, jwt.cookieOptions)
+
+  return res.status(200).json({
+    data: {
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name
+      }
+    }
+  })
 }
 
 router.post('/users/signup', [
