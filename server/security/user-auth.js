@@ -15,15 +15,10 @@ const enforceAuthentication = async (req, res, next) => {
     return end()
   }
 
-  // check that token is valid
-  const id = jwt.getUserFromToken(user)
-  if (!id) {
-    return end()
-  }
-
   // check that user exists
+  let user
   try {
-    const user = await db.users.findById(id)
+    user = await jwt.getUserFromToken(token)
     if (!user) {
       return end()
     }
@@ -32,6 +27,7 @@ const enforceAuthentication = async (req, res, next) => {
     return res.status(500).end()
   }
 
-  req.userId = user
+  // authentication passed
+  req.user = user
   return next()
 } 
