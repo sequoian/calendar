@@ -3,6 +3,7 @@ const db = require('../../db')
 const validate = require('../../validation').login
 const bcrypt = require('bcrypt')
 const jwt = require('../../security/jwt')
+const checkCsrf = require('../../security/check-csrf')
 
 const validateInputs = async (req, res, next) => {
   const errors = validate(req.body)
@@ -68,6 +69,7 @@ const sendToken = async (req, res, next) => {
 }
 
 router.post('/users/login', [
+  checkCsrf,
   validateInputs,
   authenticateInputs,
   sendToken

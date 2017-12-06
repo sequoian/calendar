@@ -5,6 +5,7 @@ const routes = require('..')
 const db = require('../../db')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
+const util = require('./util')
 
 // Prepare app
 app.use(bodyParser.json())
@@ -18,7 +19,6 @@ describe ('user routes', () => {
   })
 
   describe ('GET users', () => {
-
     it ('returns 400 without params', () => {
       return request(app)
         .get('/api/users')
@@ -65,12 +65,24 @@ describe ('user routes', () => {
       email: 'test@test.com',
       password: 'testpassword'
     }
+    let csrf
+    
+    before('get csrf token', async () => {
+      csrf = await util.authUser(app)
+    })
 
-    it ('requires csrf token')
+    it ('requires csrf token', async () => {
+      return request(app)
+        .post(url)
+        .set('Cookie', csrf.cookie)
+        .expect(401)
+    })
 
     it ('requires body', () => {
       return request(app)
         .post(url)
+        .set('Cookie', csrf.cookie)
+        .set('X-CSRF-TOKEN', csrf.token)
         .expect(400)
         .then(res => {
           assert.property(res.body, 'errors')
@@ -82,6 +94,8 @@ describe ('user routes', () => {
       return request(app)
         .post(url)
         .send(body)
+        .set('Cookie', csrf.cookie)
+        .set('X-CSRF-TOKEN', csrf.token)
         .expect(400)
         .then(res => {
           assert.property(res.body, 'errors')
@@ -98,6 +112,8 @@ describe ('user routes', () => {
       return request(app)
         .post(url)
         .send(reqBody)
+        .set('Cookie', csrf.cookie)
+        .set('X-CSRF-TOKEN', csrf.token)
         .expect(400)
         .then(res => {
           assert.property(res.body, 'errors')
@@ -109,6 +125,8 @@ describe ('user routes', () => {
       return request(app)
         .post(url)
         .send(reqBody)
+        .set('Cookie', csrf.cookie)
+        .set('X-CSRF-TOKEN', csrf.token)
         .expect(200)
         .then(res => {
           return db.users.findByEmail(reqBody.email)
@@ -125,12 +143,13 @@ describe ('user routes', () => {
       return request(app)
         .post(url)
         .send(reqBody)
+        .set('Cookie', csrf.cookie)
+        .set('X-CSRF-TOKEN', csrf.token)
         .expect(200)
         .then(res => {
           assert.property(res.body, 'data')
           assert.property(res.body.data, 'user')
           assert.exists(res.header['set-cookie'], 'cookie not set')
-          // TODO: check for jwt and csrf tokens
         })
     })
   })
@@ -141,12 +160,24 @@ describe ('user routes', () => {
       email: 'test@test.com',
       password: 'testpassword'
     }
+    let csrf
+    
+    before('get csrf token', async () => {
+      csrf = await util.authUser(app)
+    })
 
-    it ('requires csrf token')
+    it ('requires csrf token', async () => {
+      return request(app)
+        .post(url)
+        .set('Cookie', csrf.cookie)
+        .expect(401)
+    })
 
     it ('requires request body', () => {
       return request(app)
         .post(url)
+        .set('Cookie', csrf.cookie)
+        .set('X-CSRF-TOKEN', csrf.token)
         .expect(400)
         .then(res => {
           assert.property(res.body, 'errors')
@@ -158,6 +189,8 @@ describe ('user routes', () => {
       return request(app)
         .post(url)
         .send(body)
+        .set('Cookie', csrf.cookie)
+        .set('X-CSRF-TOKEN', csrf.token)
         .expect(400)
         .then(res => {
           assert.property(res.body, 'errors')
@@ -168,6 +201,8 @@ describe ('user routes', () => {
       return request(app)
         .post(url)
         .send(reqBody)
+        .set('Cookie', csrf.cookie)
+        .set('X-CSRF-TOKEN', csrf.token)
         .expect(400)
         .then(res => {
           assert.property(res.body, 'errors')
@@ -177,17 +212,20 @@ describe ('user routes', () => {
     it ('returns 200 with user data', async () => {
       await request(app)
         .post('/api/users/signup')
+        .set('Cookie', csrf.cookie)
+        .set('X-CSRF-TOKEN', csrf.token)
         .send(reqBody)
 
       return request(app)
         .post(url)
         .send(reqBody)
+        .set('Cookie', csrf.cookie)
+        .set('X-CSRF-TOKEN', csrf.token)
         .expect(200)
         .then(res => {
           assert.property(res.body, 'data')
           assert.property(res.body.data, 'user', 'no user data')
           assert.exists(res.header['set-cookie'], 'cookie not set')
-          // TODO: check for jwt and csrf tokens
         })
     })
   })
@@ -198,10 +236,6 @@ describe ('user routes', () => {
 
   describe ('POST users/auth', () => {
     const url = '/api/users/auth'
-    const reqBody = {
-      email: 'test@test.com',
-      password: 'testpassword'
-    }
 
     it ('returns 401 with csrf token when user is not logged in', () => {
       return request(app)
@@ -210,18 +244,11 @@ describe ('user routes', () => {
     })
 
     it ('returns 200 with data and csrf token when user is logged in', async () => {
-      let cookie
-      await request(app)
-        .post('/api/users/signup')
-        .send(reqBody)
-        .expect(200)
-        .then(res => {
-          cookie = res.header['set-cookie']
-        })
+      const user = await util.addUser(app)
 
       return request(app)
         .post(url)
-        .set('Cookie', cookie)
+        .set('Cookie', user.cookie)
         .expect(200)
         .then(res => {
           assert.property(res.body, 'data')

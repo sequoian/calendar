@@ -31,3 +31,5 @@ const enforceAuthentication = async (req, res, next) => {
   req.user = user
   return next()
 } 
+
+module.exports = enforceAuthentication

@@ -1,6 +1,7 @@
 const should = require('chai').should()
 const db = require('../../db')
 const jwt = require('../jwt')
+const csrf = require('../csrf')
 
 describe ('security', () => {
   describe ('jwt', () => {
@@ -41,6 +42,13 @@ describe ('security', () => {
         const user = await jwt.getUserFromToken(validToken)
         should.not.exist(user)
       })
+    })
+  })
+
+  describe ('csrf', () => {
+    it ('gets token', async () => {
+      const token = await csrf.generateToken()
+      token.should.be.string
     })
   })
 })

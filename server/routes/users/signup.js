@@ -2,6 +2,7 @@ const router = require('express').Router()
 const db = require('../../db')
 const validate = require('../../validation').signup
 const jwt = require('../../security/jwt')
+const checkCsrf = require('../../security/check-csrf')
 const bcrypt = require('bcrypt')
 const saltRounds = 10
 
@@ -84,6 +85,7 @@ const addUser = async (req, res, next) => {
 }
 
 router.post('/users/signup', [
+  checkCsrf,
   validateInputs,
   hashPassword,
   addUser
