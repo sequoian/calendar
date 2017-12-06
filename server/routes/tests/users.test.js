@@ -52,11 +52,52 @@ describe ('user routes', () => {
   })
 
   describe ('GET users/:id', () => {
-    it ('returns 404 when user does not exist')
-    it ('returns 401 without authentication')
-    it ('returns 401 with invalid authentication')
-    it ('returns 403 with no permission')
-    it ('returns 200 with json when user exists')
+    const url = '/api/users/'
+
+    it ('returns 401 with no authentication', () => {
+      return request(app)
+        .get(url + '1')
+        .expect(401)
+    })
+
+    it ('returns 400 on invalid param', async () => {
+      const user = await util.addUser(app)
+      return request(app)
+        .get(url + 'dog')
+        .set('Cookie', user.cookie)
+        .expect(400)
+    })
+
+    it ('returns 404 when user does not exist', async () => {
+      const user = await util.addUser(app)
+      return request(app)
+        .get(url + '1')
+        .set('Cookie', user.cookie)
+        .expect(404)
+    })
+
+
+
+    it ('returns 403 with no permission', async () => {
+      const {user1, user2} = await util.addTwoUsers(app)
+
+      return request(app)
+        .get(url + user1.data.id)
+        .set('Cookie', user2.cookie)
+        .expect(403)
+    })
+
+    it ('returns 200 with json when user exists', async () => {
+      const user = await util.addUser(app)
+
+      return request(app)
+        .get(url + user.data.id)
+        .set('Cookie', user.cookie)
+        .expect(200)
+        .then(res => {
+          assert.property(res.body, 'data')
+        })
+    })
   })
 
   describe ('POST users/signup', () => {

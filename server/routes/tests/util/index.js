@@ -21,8 +21,8 @@ const authUser = (app) => {
  * Creates user through the signup route.
  * Returns jwt cookie and user data
  */
-const addUser = async (app) => {
-  const body = {
+const addUser = async (app, user) => {
+  const body = user || {
     email: 'test@test.com',
     password: 'testpassword'
   }
@@ -44,7 +44,21 @@ const addUser = async (app) => {
     })
 }
 
+const addTwoUsers = async app => {
+  const user1 = await addUser(app)
+  const user2 = await addUser(app, {
+    email: 'second@test.com',
+    password: 'testingsecond'
+  })
+
+  return {
+    user1,
+    user2
+  }
+}
+
 module.exports = {
   authUser,
-  addUser
+  addUser,
+  addTwoUsers
 }
