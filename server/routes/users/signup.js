@@ -3,8 +3,7 @@ const db = require('../../db')
 const validate = require('../../validation').signup
 const jwt = require('../../security/jwt')
 const checkCsrf = require('../../security/check-csrf')
-const bcrypt = require('bcrypt')
-const saltRounds = 10
+const hashPass = require('../../security/hash')
 
 const validateInputs = async (req, res, next) => {
   const errors = validate(req.body)
@@ -33,30 +32,17 @@ const validateInputs = async (req, res, next) => {
   }
 }
 
-const hashPassword = (req, res, next) => {
-  const {password} = req.body
-  const end = () => res.status(500).end()
-
-  bcrypt.genSalt(saltRounds, (error, salt) => {
-    if (error) {
-      return end()
-    }
-
-    bcrypt.hash(password, salt, (error, hash) => {
-      if (error) {
-        return end()
-      }
-
-      req.body.hashedPassword = hash
-      next()
-    })
-  })
-}
-
 const addUser = async (req, res, next) => {
+  let hashedPassword
+  try {
+    hashedPassword = await hashPass(req.body.password)
+  } catch (error) {
+    next(error)
+  }
+
   const values = {
     email: req.body.email.trim(),
-    password: req.body.hashedPassword,
+    password: hashedPassword,
     name: null
   }
 
@@ -87,7 +73,6 @@ const addUser = async (req, res, next) => {
 router.post('/users/signup', [
   checkCsrf,
   validateInputs,
-  hashPassword,
   addUser
 ])
 

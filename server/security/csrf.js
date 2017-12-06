@@ -4,9 +4,9 @@ exports.generateToken = (callback) => {
   return new Promise((resolve, reject) => {
     crypto.randomBytes(48, (err, buff) => {
       if (err) {
-        return reject(err)
+        reject(err)
       }
-      return resolve(buff.toString('hex'))
+      resolve(buff.toString('hex'))
     })
   })
 }

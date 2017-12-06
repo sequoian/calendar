@@ -68,7 +68,8 @@ router.get('/users', async (req, res) => {
 router.use('/', [
   require('./signup'),
   require('./login'),
-  require('./auth')
+  require('./auth'),
+  require('./update')
 ])
 
 module.exports = router
