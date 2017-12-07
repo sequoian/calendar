@@ -12,10 +12,7 @@
     "node": "8.9.1"
   },
   "scripts": {
-    "test": "mocha ./server/**/*.test.js",
-    "test:routes:users": "mocha ./server/routes/tests/users.test.js",
-    "test:security": "mocha ./server/security/tests/*.test.js",
-    "test:validation": "mocha ./server/validation/**/*.test.js"
+    "test": "node server/test"
   },
   "dependencies": {
     "bcrypt": "^1.0.3",

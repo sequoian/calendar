@@ -272,7 +272,7 @@ describe ('user routes', () => {
   })
 
   describe ('POST users/:id', () => {
-    const url = id => `/api/user/${id}`
+    const url = id => `/api/users/${id}`
     const updatedUser = {
       email: 'newemail@test.com',
       name: 'Joe'
