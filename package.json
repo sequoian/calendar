@@ -14,7 +14,8 @@
   "scripts": {
     "test": "mocha ./server/**/*.test.js",
     "test:routes:users": "mocha ./server/routes/tests/users.test.js",
-    "test:security": "mocha ./server/security/tests/*.test.js"
+    "test:security": "mocha ./server/security/tests/*.test.js",
+    "test:validation": "mocha ./server/validation/**/*.test.js"
   },
   "dependencies": {
     "bcrypt": "^1.0.3",

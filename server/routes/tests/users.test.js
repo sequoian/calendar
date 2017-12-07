@@ -272,30 +272,72 @@ describe ('user routes', () => {
   })
 
   describe ('POST users/:id', () => {
-    const url = '/api/users/'
+    const url = id => `/api/user/${id}`
+    const updatedUser = {
+      email: 'newemail@test.com',
+      name: 'Joe'
+    }
 
     it ('checks csrf', async () => {
-
+      return request(app)
+        .post(url(1))
+        .expect(401)
     })
 
     it ('checks authentication', async () => {
-
+      const csrf = await util.authUser(app)
+      return request(app)
+        .post(url(0))
+        .set('Cookie', csrf.cookie)
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(401)
     })
 
     it ('validates body', async () => {
-
+      const csrf = await util.authUser(app)
+      const user = await util.addUser(app)
+      return request(app)
+        .post(url(0))
+        .send({email: 'test'})
+        .set('Cookie', [csrf.cookie, user.cookie])
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(400)
+        .then(res => {
+          assert.property(res.body, 'errors')
+        })
     })
 
     it ('returns 404 if user does not exist', async () => {
-
+      const csrf = await util.authUser(app)
+      const user = await util.addUser(app)
+      return request(app)
+        .post(url(0))
+        .send(updatedUser)
+        .set('Cookie', [csrf.cookie, user.cookie])
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(404)
     })
     
     it ('checks permission', async () => {
-
+      const csrf = await util.authUser(app)
+      const {user1, user2} = await util.addTwoUsers(app)
+      return request(app)
+        .post(url(user1.data.id))
+        .send(updatedUser)
+        .set('Cookie', [csrf.cookie, user2.cookie])
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(403)
     })
 
     it ('returns data on success', async () => {
-
+      const csrf = await util.authUser(app)
+      const user = await util.addUser(app)
+      return request(app)
+        .post(url(user.data.id))
+        .send(updatedUser)
+        .set('Cookie', [csrf.cookie, user.cookie])
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(200)
     })
   })
 

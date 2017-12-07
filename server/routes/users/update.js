@@ -6,6 +6,8 @@ const checkAuth = require('../../security/user-auth')
 const hashPass = require('../../security/hash')
 
 const validateUpdate = (req, res, next) => {
+  const {email, name} = req.body
+
 
 }
 
@@ -63,7 +65,6 @@ const updateUserPassword = async (req, res, next) => {
     return next(error)
   }
 }
-
 
 router.post('/users/:id', [
   checkCsrf,

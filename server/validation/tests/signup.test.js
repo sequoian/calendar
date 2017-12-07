@@ -1,5 +1,6 @@
 const should = require('chai').should()
 const validate = require('../index').signup
+const valName = require('../index').name
 
 describe ('signup form validation', () => {
   const valid = {
@@ -32,3 +33,12 @@ describe ('signup form validation', () => {
   })
 }) 
 
+describe ('name validation', () => {
+  it ('name', () => {
+    valName(2).should.be.string
+    valName('').should.be.string
+    valName('  ').should.be.string
+    should.not.exist(valName('a'))
+    should.not.exist(valName('Joe'))
+  })
+})
