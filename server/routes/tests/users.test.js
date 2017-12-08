@@ -513,7 +513,7 @@ describe ('user routes', () => {
     })
   })
 
-  describe.only ('DELETE /users/:id', () => {
+  describe ('DELETE /users/:id', () => {
     const url = id => `/api/users/${id}`
 
     it ('checks csrf', () => {
@@ -561,6 +561,10 @@ describe ('user routes', () => {
         .expect(204)
         .then(res => {
           assert.exists(res.header['set-cookie'])
+          return db.users.findById(user.data.id)
+        })
+        .then(user => {
+          assert.notExists(user)
         })
     })
   })
