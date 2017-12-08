@@ -29,7 +29,7 @@ describe.only ('event routes', () => {
     await db.events.clearTable()
   })
 
-  describe.only ('GET events', () => {
+  describe ('GET events', () => {
     const url = '/api/events'
 
     it ('checks authentication', () => {
@@ -67,13 +67,45 @@ describe.only ('event routes', () => {
   })
 
   describe ('GET events/:id', () => {
-    it ('checks authentication')
+    const url = id => `/api/events/${id}`
 
-    it ('checks permission')
+    it ('checks authentication', () => {
+      return request(app)
+        .get(url(0))
+        .expect(401)
+    })
 
-    it ('checks if event exists')
+    it ('checks if event exists', async () => {
+      const user = await util.addUser(app)
 
-    it ('gets event')
+      return request(app)
+        .get(url(0))
+        .set('Cookie', user.cookie)
+        .expect(404)
+    })
+
+    it ('checks permission', async () => {
+      const {user1, user2} = await util.addTwoUsers(app)
+      const event = await addEvent('Test', user1.data.id)
+
+      return request(app)
+        .get(url(event.id))
+        .set('Cookie', user2.cookie)
+        .expect(403)
+    })
+
+    it ('gets event', async () => {
+      const user = await util.addUser(app)
+      const event = await addEvent('Test', user.data.id)
+      
+      return request(app)
+        .get(url(event.id))
+        .set('Cookie', user.cookie)
+        .expect(200)
+        .then(res => {
+          expect(res.body.data.event.id).to.equal(event.id)
+        })  
+    })
   })
 
   describe ('POST events', () => {
