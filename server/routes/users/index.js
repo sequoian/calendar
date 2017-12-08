@@ -69,7 +69,8 @@ router.use('/', [
   require('./signup'),
   require('./login'),
   require('./auth'),
-  require('./update')
+  require('./update'),
+  require('./logout')
 ])
 
 module.exports = router

@@ -274,8 +274,7 @@ describe ('user routes', () => {
   describe ('POST users/:id', () => {
     const url = id => `/api/users/${id}`
     const updatedUser = {
-      email: 'newemail@test.com',
-      name: 'Joe'
+      email: 'newemail@test.com'
     }
 
     it ('checks csrf', async () => {
@@ -329,7 +328,7 @@ describe ('user routes', () => {
         .expect(403)
     })
 
-    it ('returns data on success', async () => {
+    it ('changes email', async () => {
       const csrf = await util.authUser(app)
       const user = await util.addUser(app)
       return request(app)
@@ -338,6 +337,30 @@ describe ('user routes', () => {
         .set('Cookie', [csrf.cookie, user.cookie])
         .set('X-CSRF-TOKEN', csrf.token)
         .expect(200)
+        .then(res => {
+          return db.users.findById(user.data.id)
+        })
+        .then(u => {
+          assert.notEqual(user.data.email, u.email)
+        })
+    })
+
+    it ('changes name', async () => {
+      const csrf = await util.authUser(app)
+      const user = await util.addUser(app)
+      return request(app)
+        .post(url(user.data.id))
+        .send({name: 'Carl'})
+        .set('Cookie', [csrf.cookie, user.cookie])
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(200)
+        .then(res => {
+          return db.users.findById(user.data.id)
+        })
+        .then(u => {
+          assert.notEqual(user.data.name, u.name)
+          assert.equal(user.data.email, u.email)
+        })
     })
   })
 
@@ -366,15 +389,50 @@ describe ('user routes', () => {
   describe ('POST users/:id/logout', () => {
     const url = id => `/api/users/${id}/logout`
 
-    it ('checks csrf')
+    it ('checks csrf', () => {
+      return request(app)
+        .post(url(0))
+        .expect(401)
+    })
 
-    it ('checks authentication')
+    it ('checks authentication', async () => {
+      const csrf = await util.authUser(app)
+      return request(app)
+        .post(url(0))
+        .set('Cookie', csrf.cookie)
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(401)
+    })
 
-    it ('returns 404 if user does not exist')
+    it ('returns 404 if user does not exist', async () => {
+      const csrf = await util.authUser(app)
+      const user = await util.addUser(app)
+      return request(app)
+        .post(url(0))
+        .set('Cookie', [csrf.cookie, user.cookie])
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(404)
+    })
 
-    it ('checks permission')
+    it ('checks permission', async () => {
+      const csrf = await util.authUser(app)
+      const {user1, user2} = await util.addTwoUsers(app)
+      return request(app)
+        .post(url(user1.data.id))
+        .set('Cookie', [csrf.cookie, user2.cookie])
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(403)
+    })
 
-    it ('returns 204 on success')
+    it ('returns 204 on success', async () => {
+      const csrf = await util.authUser(app)
+      const user = await util.addUser(app)
+      return request(app)
+        .post(url(user.data.id))
+        .set('Cookie', [csrf.cookie, user.cookie])
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(204)
+    })
   })
 
   describe ('POST users/:id/password', () => {
