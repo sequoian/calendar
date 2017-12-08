@@ -432,6 +432,9 @@ describe ('user routes', () => {
         .set('Cookie', [csrf.cookie, user.cookie])
         .set('X-CSRF-TOKEN', csrf.token)
         .expect(204)
+        .then(res => {
+          assert.exists(res.header['set-cookie'])
+        })
     })
   })
 
@@ -510,17 +513,55 @@ describe ('user routes', () => {
     })
   })
 
-  describe ('DELETE /users/:id', () => {
+  describe.only ('DELETE /users/:id', () => {
     const url = id => `/api/users/${id}`
 
-    it ('checks csrf')
+    it ('checks csrf', () => {
+      return request(app)
+        .delete(url(0))
+        .expect(401)
+    })
 
-    it ('checks authentication')
+    it ('checks authentication', async () => {
+      const csrf = await util.authUser(app)
+      return request(app)
+        .delete(url(0))
+        .set('Cookie', csrf.cookie)
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(401)
+    })
 
-    it ('checks if user exists')
+    it ('checks if user exists', async () => {
+      const csrf = await util.authUser(app)
+      const user = await util.addUser(app)
+      return request(app)
+        .delete(url(0))
+        .set('Cookie', [csrf.cookie, user.cookie])
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(404)
+    })
 
-    it ('checks permission')
+    it ('checks permission', async () => {
+      const csrf = await util.authUser(app)
+      const {user1, user2} = await util.addTwoUsers(app)
+      return request(app)
+        .delete(url(user1.data.id))
+        .set('Cookie', [csrf.cookie, user2.cookie])
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(403)
+    })
 
-    it ('returns 204 on success')
+    it ('returns 204 on success and clears cookie', async () => {
+      const csrf = await util.authUser(app)
+      const user = await util.addUser(app)
+      return request(app)
+        .delete(url(user.data.id))
+        .set('Cookie', [csrf.cookie, user.cookie])
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(204)
+        .then(res => {
+          assert.exists(res.header['set-cookie'])
+        })
+    })
   })
 })
