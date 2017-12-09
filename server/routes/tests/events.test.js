@@ -12,6 +12,14 @@ app.use(bodyParser.json())
 app.use(cookieParser(process.env.COOKIE_KEY))
 app.use('/', routes)
 
+const validEvent = {
+  title: 'Dentist Appointment',
+  day: 'January 25, 2018',
+  time: '2:30',
+  location: 'Dentist Office',
+  description: ':('
+}
+
 const addEvent = (title, owner) => {
   return db.events.add({
     title,
@@ -109,13 +117,52 @@ describe ('event routes', () => {
   })
 
   describe ('POST events', () => {
-    it ('checks csrf')
+    const url = '/api/events'
 
-    it ('checks authentication')
+    it ('checks csrf', () => {
+      return request(app)
+        .post(url)
+        .expect(401)
+    })
 
-    it ('validates body')
+    it ('checks authentication', async () => {
+      const csrf = await util.authUser(app)
+      return request(app)
+        .post(url)
+        .set('Cookie', csrf.cookie)
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(401)
+    })
 
-    it ('adds event to db')
+    it ('validates body', async () => {
+      const csrf = await util.authUser(app)
+      const user = await util.addUser(app)
+      const invalidEvent = Object.assign({}, validEvent, {title: null})
+      return request(app)
+        .post(url)
+        .send(invalidEvent)
+        .set('Cookie', [csrf.cookie, user.cookie])
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(400)
+        .then(res => {
+          expect(res.body.errors.title).to.exist
+        })
+    })
+
+    it ('adds event to db', async () => {
+      const csrf = await util.authUser(app)
+      const user = await util.addUser(app)
+      return request(app)
+        .post(url)
+        .send(validEvent)
+        .set('Cookie', [csrf.cookie, user.cookie])
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(200)
+        .then(res => {
+          expect(res.body.data.event.title).to.equal(validEvent.title)
+          expect(res.body.data.event.owner).to.equal(user.data.id)
+        })
+    })
   })
 
   describe ('POST events/:id', () => {
