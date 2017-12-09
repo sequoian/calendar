@@ -27,7 +27,53 @@ router.post('/events', [
         }
       })
     } catch (e) {
-      next(e)
+      return next(e)
+    }
+  }
+])
+
+router.post('/events/:id', [
+  checkCsrf,
+  checkAuth,
+  async (req, res, next) => {
+    const body = req.body
+    // validate
+    const errors = validate(body)
+    if (Object.keys(errors).length > 0) {
+      return res.status(400).json({
+        errors
+      })
+    }
+
+    // check if exists
+    const eventId = req.params.id
+    let event
+    try {
+      event = await db.events.findById(eventId)
+      if (!event) {
+        return res.status(404).end()
+      }
+    } catch (e) {
+      return next(e)
+    }
+
+    // check permission
+    if (event.owner !== req.user.id) {
+      return res.status(403).end()
+    }
+
+    // update
+    body.id = event.id
+    body.owner = event.owner
+    try {
+      const updated = await db.events.update(body)
+      return res.status(200).json({
+        data: {
+          event: updated
+        }
+      })
+    } catch (e) {
+      return next(e)
     }
   }
 ])

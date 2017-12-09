@@ -19,6 +19,7 @@ const validEvent = {
   location: 'Dentist Office',
   description: ':('
 }
+const invalidEvent = Object.assign({}, validEvent, {title: null})
 
 const addEvent = (title, owner) => {
   return db.events.add({
@@ -137,7 +138,6 @@ describe ('event routes', () => {
     it ('validates body', async () => {
       const csrf = await util.authUser(app)
       const user = await util.addUser(app)
-      const invalidEvent = Object.assign({}, validEvent, {title: null})
       return request(app)
         .post(url)
         .send(invalidEvent)
@@ -165,18 +165,80 @@ describe ('event routes', () => {
     })
   })
 
-  describe ('POST events/:id', () => {
-    it ('checks csrf')
+  describe.only ('POST events/:id', () => {
+    const url = id => `/api/events/${id}`
 
-    it ('checks authentication')
+    it ('checks csrf', () => {
+      return request(app)
+        .post(url(0))
+        .expect(401)
+    })
 
-    it ('validates body')
+    it ('checks authentication', async () => {
+      const csrf = await util.authUser(app)
+      return request(app)
+        .post(url(0))
+        .set('Cookie', csrf.cookie)
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(401)
+    })
 
-    it ('checks if event exists')
+    it ('validates body', async () => {
+      const csrf = await util.authUser(app)
+      const user = await util.addUser(app)
+      return request(app)
+        .post(url(0))
+        .send(invalidEvent)
+        .set('Cookie', [csrf.cookie, user.cookie])
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(400)
+        .then(res => {
+          expect(res.body.errors.title).to.exist
+        })
+    })
 
-    it ('checks permission')
+    it ('checks if event exists', async () => {
+      const csrf = await util.authUser(app)
+      const user = await util.addUser(app)
+      return request(app)
+        .post(url(0))
+        .send(validEvent)
+        .set('Cookie', [csrf.cookie, user.cookie])
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(404)
+    })
 
-    it ('updates event in db')
+    it ('checks permission', async () => {
+      const csrf = await util.authUser(app)
+      const {user1, user2} = await util.addTwoUsers(app)
+      const title = 'Test'
+      const event = await addEvent(title, user1.data.id)
+      return request(app)
+        .post(url(event.id))
+        .send(validEvent)
+        .set('Cookie', [csrf.cookie, user2.cookie])
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(403)
+    })
+
+    it ('updates event in db', async () => {
+      const csrf = await util.authUser(app)
+      const user = await util.addUser(app)
+      const title = 'Test'
+      const event = await addEvent(title, user.data.id)
+      return request(app)
+        .post(url(event.id))
+        .send(validEvent)
+        .set('Cookie', [csrf.cookie, user.cookie])
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(200)
+        .then(res => {
+          const newEvent = res.body.data.event
+          expect(newEvent.id).to.equal(event.id)
+          expect(newEvent.title).to.equal(validEvent.title)
+          expect(newEvent.owner).to.equal(user.data.id)
+        })
+    })
   })
 
   describe ('DELETE events/:id', () => {
