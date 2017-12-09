@@ -23,7 +23,7 @@ const addEvent = (title, owner) => {
   })
 }
 
-describe.only ('event routes', () => {
+describe ('event routes', () => {
   beforeEach('clear tables', async () => {
     await db.users.clearTable()
     await db.events.clearTable()

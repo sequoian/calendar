@@ -43,4 +43,16 @@ describe ('validation tests', () => {
     v.isEmpty([undefined]).should.be.false
     v.isEmpty([1]).should.be.false
   })
+
+  it ('is date', () => {
+    v.isDate(new Date('2018-01-31')).should.be.true
+    v.isDate(new Date()).should.be.true
+    v.isDate(new Date(50)).should.be.true
+    v.isDate(new Date('2018-01-32')).should.be.false
+    v.isDate(new Date('test')).should.be.false
+    v.isDate().should.be.false
+    v.isDate(null).should.be.false
+    v.isDate('2018-01-31').should.be.false
+    v.isDate(50).should.be.false
+  })
 })
