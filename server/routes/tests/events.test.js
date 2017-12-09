@@ -165,7 +165,7 @@ describe ('event routes', () => {
     })
   })
 
-  describe.only ('POST events/:id', () => {
+  describe ('POST events/:id', () => {
     const url = id => `/api/events/${id}`
 
     it ('checks csrf', () => {
@@ -241,15 +241,61 @@ describe ('event routes', () => {
     })
   })
 
-  describe ('DELETE events/:id', () => {
-    it ('checks csrf')
+  describe.only ('DELETE events/:id', () => {
+    const url = id => `/api/events/${id}`
 
-    it ('checks authentication')
+    it ('checks csrf', () => {
+      return request(app)
+        .delete(url(0))
+        .expect(401)
+    })
 
-    it ('checks if event exists')
+    it ('checks authentication', async () => {
+      const csrf = await util.authUser(app)
+      return request(app)
+        .delete(url(0))
+        .set('Cookie', csrf.cookie)
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(401)
+    })
 
-    it ('checks permission')
+    it ('checks if event exists', async () => {
+      const csrf = await util.authUser(app)
+      const user = await util.addUser(app)
+      const event = await addEvent('Test', user.data.id)
+      return request(app)
+        .delete(url(0))
+        .set('Cookie', [csrf.cookie, user.cookie])
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(404)
+    })
 
-    it ('deletes event from db')
+    it ('checks permission', async () => {
+      const csrf = await util.authUser(app)
+      const {user1, user2} = await util.addTwoUsers(app)
+      const event = await addEvent('Test', user1.data.id)
+      return request(app)
+        .delete(url(event.id))
+        .set('Cookie', [csrf.cookie, user2.cookie])
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(403)
+    })
+
+    it ('deletes event from db', async () => {
+      const csrf = await util.authUser(app)
+      const user = await util.addUser(app)
+      const event = await addEvent('Test', user.data.id)
+      return request(app)
+        .delete(url(event.id))
+        .set('Cookie', [csrf.cookie, user.cookie])
+        .set('X-CSRF-TOKEN', csrf.token)
+        .expect(204)
+        .then(res => {
+          return db.events.findById(event.id)
+        })
+        .then(ev => {
+          expect(ev).to.be.null
+        })
+    })
   })
 })
