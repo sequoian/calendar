@@ -3,7 +3,6 @@ const db = require('../../db')
 const validate = require('../../validation').signup
 const jwt = require('../../security/jwt')
 const checkCsrf = require('../../security/check-csrf')
-const hashPass = require('../../security/hash')
 
 const validateInputs = async (req, res, next) => {
   const errors = validate(req.body)
@@ -33,23 +32,11 @@ const validateInputs = async (req, res, next) => {
 }
 
 const addUser = async (req, res, next) => {
-  let hashedPassword
-  try {
-    hashedPassword = await hashPass(req.body.password)
-  } catch (error) {
-    next(error)
-  }
-
-  const values = {
-    email: req.body.email.trim(),
-    password: hashedPassword,
-    name: null
-  }
-
+  req.body.name = null
   // add user to db
   let user
   try {
-    user = await db.users.add(values)
+    user = await db.users.add(req.body)
   } catch (error) {
     console.log(error)
     return res.status(500).end()

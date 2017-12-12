@@ -250,7 +250,7 @@ describe ('user routes', () => {
         })
     })
 
-    it ('returns 200 with user data', async () => {
+    it.only ('returns 200 with user data', async () => {
       await request(app)
         .post('/api/users/signup')
         .set('Cookie', csrf.cookie)

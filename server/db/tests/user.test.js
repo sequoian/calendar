@@ -1,4 +1,4 @@
-const assert = require('chai').assert
+const expect = require('chai').expect
 const db = require('..')
 
 const moe = {
@@ -8,42 +8,62 @@ const moe = {
 }
 
 describe('user repo', () => {
-  before('clear users', () => {
-    return db.users.clearTable()
+  beforeEach('clear users', async () => {
+    await db.users.clearTable()
   })
 
-  let user
-
-  it ('add user', async () => {
-    user = await db.users.add(moe)
-    assert.isObject(user)
+  it('add user', async () => {
+    const user = await db.users.add(moe)
+    expect(user.email).to.equal(moe.email)
   })
 
-  it ('find by id', async () => {
+  it('find by id', async () => {
+    const user = await db.users.add(moe)
     const result = await db.users.findById(user.id)
-    assert.isObject(result)
+    expect(result.email).to.equal(user.email)
   })
 
-  it ('find by email', async () => {
-    let result = await db.users.findByEmail(user.email)
-    assert.isObject(result)
-    assert.strictEqual(result.email, user.email)
-    result = await db.users.findByEmail('missing')
-    assert.notExists(result, 'found email that does not exist')
+  it('find by email', async () => {
+    const user = await db.users.add(moe)
+    const result = await db.users.findByEmail(user.email)
+    expect(result.id).to.equal(user.id)
   })
 
-  it ('update user', async () => {
-    const newEmail = 'new@test.com'
-    const updated = Object.assign({}, user, {email: newEmail})
-    user = await db.users.update(updated)
-    assert.isObject(user)
-    assert.strictEqual(user.email, newEmail)
+  it('check password', async () => {
+    const user = await db.users.add(moe)
+    // correct password
+    let result = await db.users.checkPassword(user.id, moe.password)
+    expect(result).to.be.true
+    // incorrect password
+    result = await db.users.checkPassword(user.id, 'wrongpass')
+    expect(result).to.be.false
   })
 
-  it ('remove user', async () => {
+  it('update user', async () => {
+    const user = await db.users.add(moe)
+    const update = Object.assign({}, user, {
+      email: 'newmail@test.com'
+    })
+    const updatedUser = await db.users.update(update)
+    expect(updatedUser.email).to.equal(update.email)
+  })
+
+  it('update password', async () => {
+    const user = await db.users.add(moe)
+    const newPass = 'newpassword'
+    const updated = await db.users.updatePassword(user.id, newPass)
+    expect(updated).to.equal(1)
+    // check password
+    const result = await db.users.checkPassword(user.id, newPass)
+    expect(result).to.be.true
+  })
+
+  it('remove user', async () => {
+    const user = await db.users.add(moe)
     const result = await db.users.remove(user.id)
-    assert.strictEqual(result, 1)
-    const u = await db.users.findById(user.id)
-    assert.notExists(u, 'remove did not work correctly')
+    expect(result).to.equal(1)
+    // look for user
+    const missing = await db.users.findById(user.id)
+    expect(missing).to.be.null
   })
 })

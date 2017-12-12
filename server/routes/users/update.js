@@ -4,7 +4,6 @@ const validate = require('../../validation').signup
 const validateName = require('../../validation').name
 const checkCsrf = require('../../security/check-csrf')
 const checkAuth = require('../../security/user-auth')
-const hashPass = require('../../security/hash')
 
 const validateUpdate = async (req, res, next) => {
   const {email, name} = req.body
@@ -134,18 +133,11 @@ const updateUserPassword = async (req, res, next) => {
     return res.status(403).end()
   }
 
-  let hashedPassword
   try {
-    hashedPassword = await hashPass(password)
-  } catch (error) {
-    next(error)
-  }
-
-  try {
-    const updatedUser = await db.users.update({
-      ...user,
-      password: hashedPassword
-    })
+    const result = await db.users.updatePassword(user.id, password)
+    if (result !== 1) {
+      return res.status(500).end()
+    }
     return res.status(204).end()
   } catch (error) {
     return next(error)

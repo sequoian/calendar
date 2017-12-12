@@ -35,20 +35,22 @@ const authenticateInputs = async (req, res, next) => {
     if (!user) {
       return invalidAndEnd()
     }
-  } catch (error) {
-    console.log(error)
-    return res.status(500).end()
+  } catch (e) {
+    return next(e)
   }
 
-  // check password
-  bcrypt.compare(password, user.password, (error, success) => {
-    if (error || !success) {
+  try {
+    // check password
+    const matches = await db.users.checkPassword(user.id, password)
+    if (!matches) {
       return invalidAndEnd()
     }
+  } catch (e) {
+    return next(e)
+  }
 
-    req.body.user = user
-    return next()
-  })
+  req.body.user = user
+  return next()
 }
 
 const sendToken = async (req, res, next) => {
