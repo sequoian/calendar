@@ -4,6 +4,11 @@ const validate = require('../../validation').signup
 const validateName = require('../../validation').name
 const checkCsrf = require('../../security/check-csrf')
 const checkAuth = require('../../security/user-auth')
+const {
+  ValidationError,
+  PermissionError,
+  NotFoundError
+} = require('../../errors')
 
 const validateUpdate = async (req, res, next) => {
   const {email, name} = req.body
@@ -30,7 +35,7 @@ const validateUpdate = async (req, res, next) => {
           error = 'That email already exists'
         }
       } catch (error) {
-        next (error)
+        return next (error)
       }
     }
 
@@ -49,9 +54,7 @@ const validateUpdate = async (req, res, next) => {
   }
 
   if (Object.keys(errors).length > 0) {
-    return res.status(400).json({
-      errors
-    })
+    return next(new ValidationError(errors))
   }
 
   return next()
@@ -69,11 +72,11 @@ const updateUser = async (req, res, next) => {
   }
 
   if (!user) {
-    return res.status(404).end()
+    return next(new NotFoundError)
   }
 
   if (user.id !== req.user.id) {
-    return res.status(403).end()
+    return next(new PermissionError)
   }
   
   // trim inputs if they exist

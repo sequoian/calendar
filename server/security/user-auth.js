@@ -1,5 +1,6 @@
 const jwt = require('./jwt')
 const db = require('../db')
+const {AuthenticationError} = require('../errors')
 
 /**
  * Express middleware that checks if the user is authenticated.
@@ -7,7 +8,7 @@ const db = require('../db')
  * When not authenticated, responds with 401 and ends the chain.
  */
 const enforceAuthentication = async (req, res, next) => {
-  const end = () => res.status(401).end()
+  const end = () => next(new AuthenticationError)
 
   // check that token exists
   const token = req.signedCookies.user
@@ -22,9 +23,8 @@ const enforceAuthentication = async (req, res, next) => {
     if (!user) {
       return end()
     }
-  } catch (error) {
-    console.log(error)
-    return res.status(500).end()
+  } catch (e) {
+    return next(e)
   }
 
   // authentication passed

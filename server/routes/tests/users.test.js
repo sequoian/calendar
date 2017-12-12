@@ -6,11 +6,13 @@ const db = require('../../db')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const util = require('./util')
+const errorMiddleware = require('../../middleware/error')
 
 // Prepare app
 app.use(bodyParser.json())
 app.use(cookieParser(process.env.COOKIE_KEY))
 app.use('/', routes)
+app.use(errorMiddleware)
 
 
 describe ('user routes', () => {
@@ -250,7 +252,7 @@ describe ('user routes', () => {
         })
     })
 
-    it.only ('returns 200 with user data', async () => {
+    it ('returns 200 with user data', async () => {
       await request(app)
         .post('/api/users/signup')
         .set('Cookie', csrf.cookie)
@@ -271,7 +273,7 @@ describe ('user routes', () => {
     })
   })
 
-  describe ('POST users/:id', () => {
+  describe.only ('POST users/:id', () => {
     const url = id => `/api/users/${id}`
     const updatedUser = {
       email: 'newemail@test.com'
