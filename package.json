@@ -12,7 +12,7 @@
     "node": "8.9.1"
   },
   "scripts": {
-    "test": "node server/test"
+    "test": "mocha server/users/test/models/models.test.js"
   },
   "dependencies": {
     "bcrypt": "^1.0.3",

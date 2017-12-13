@@ -273,7 +273,7 @@ describe ('user routes', () => {
     })
   })
 
-  describe.only ('POST users/:id', () => {
+  describe ('POST users/:id', () => {
     const url = id => `/api/users/${id}`
     const updatedUser = {
       email: 'newemail@test.com'
