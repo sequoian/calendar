@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 
-class UserRepository {
+class UserModel {
   constructor(db) {
     this.db = db
   }
@@ -65,7 +65,7 @@ class UserRepository {
   }
 }
 
-module.exports = UserRepository
+module.exports = UserModel
 
 
 // Helpers
