@@ -1,4 +1,3 @@
-require('dotenv').config()
 const UserModel = require('../users/models')
 const initOptions = {
   extend(obj) {

@@ -1,7 +1,7 @@
 const validate = require('../../validate/login')
 const expect = require('chai').expect
 
-describe.only('login form validation', () => {
+describe('login form validation', () => {
   const valid = {
     email: 'test@test.com',
     password: '123456'

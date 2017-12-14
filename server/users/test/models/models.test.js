@@ -7,7 +7,7 @@ const validUser = {
   password: 'abc123'
 }
 
-describe.only('user model', () => {
+describe('user model', () => {
   let user
 
   // hooks

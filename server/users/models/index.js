@@ -41,13 +41,13 @@ class UserModel {
 
   findById(id) {
     return this.db.oneOrNone(`
-      SELECT * FROM users WHERE id = $1
+      SELECT id, email, name FROM users WHERE id = $1
     `, id)
   }
 
   findByEmail(email) {
     return this.db.oneOrNone(`
-      SELECT * FROM users WHERE email = $1
+      SELECT id, email, name FROM users WHERE email = $1
     `, email)
   }
 

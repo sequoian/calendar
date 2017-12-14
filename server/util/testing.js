@@ -1,5 +1,9 @@
 const request = require('supertest')
 const parseCookie = require('cookie').parse
+const express = require('express')
+const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
+const errorMiddleware = require('../middleware/error')
 
 /**
  * Gets csrf cookie and token from auth route
@@ -57,8 +61,18 @@ const addTwoUsers = async app => {
   }
 }
 
+const prepareApp = routes => {
+  const app = express()
+  app.use(bodyParser.json())
+  app.use(cookieParser(process.env.COOKIE_KEY))
+  app.use('/api', routes)
+  app.use(errorMiddleware)
+  return app
+}
+
 module.exports = {
   authUser,
   addUser,
-  addTwoUsers
+  addTwoUsers,
+  prepareApp
 }

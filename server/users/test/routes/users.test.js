@@ -1,108 +1,17 @@
 const request = require('supertest')
-const assert = require('chai').assert
-const app = require('express')()
-const routes = require('..')
-const db = require('../../db')
-const bodyParser = require('body-parser')
-const cookieParser = require('cookie-parser')
-const util = require('./util')
-const errorMiddleware = require('../../middleware/error')
-
-// Prepare app
-app.use(bodyParser.json())
-app.use(cookieParser(process.env.COOKIE_KEY))
-app.use('/', routes)
-app.use(errorMiddleware)
+const expect = require('chai').expect
+const routes = require('../../routes')
+const db = require('../../../db')
+const util = require('../../../util/testing')
+const app = util.prepareApp(routes)
 
 
-describe ('user routes', () => {
+describe('user routes', () => {
   beforeEach('clear users', () => {
     return db.users.clearTable()
   })
 
-  describe ('GET users', () => {
-    it ('returns 400 without params', () => {
-      return request(app)
-        .get('/api/users')
-        .expect(400)
-    })
-      
-    it ('returns 400 with invalid params', () => {
-      return request(app)
-        .get('/api/users?invalid=test')
-        .expect(400)
-    })
-      
-    it ('returns 404 when email does not exist', () => {
-      return request(app)
-        .get('/api/users?email=test@test.com')
-        .expect(404)
-    })
-
-    it ('returns 204 when email exists', async () => {
-      const email = 'test@test.com'
-      await db.users.add({
-        email,
-        password: '123',
-        name: 'jack'
-      })
-
-      return request(app)
-        .get(`/api/users?email=${email}`)
-        .expect(204)
-    })
-  })
-
-  describe ('GET users/:id', () => {
-    const url = '/api/users/'
-
-    it ('returns 401 with no authentication', () => {
-      return request(app)
-        .get(url + '1')
-        .expect(401)
-    })
-
-    it ('returns 400 on invalid param', async () => {
-      const user = await util.addUser(app)
-      return request(app)
-        .get(url + 'dog')
-        .set('Cookie', user.cookie)
-        .expect(400)
-    })
-
-    it ('returns 404 when user does not exist', async () => {
-      const user = await util.addUser(app)
-      return request(app)
-        .get(url + '1')
-        .set('Cookie', user.cookie)
-        .expect(404)
-    })
-
-
-
-    it ('returns 403 with no permission', async () => {
-      const {user1, user2} = await util.addTwoUsers(app)
-
-      return request(app)
-        .get(url + user1.data.id)
-        .set('Cookie', user2.cookie)
-        .expect(403)
-    })
-
-    it ('returns 200 with json when user exists', async () => {
-      const user = await util.addUser(app)
-
-      return request(app)
-        .get(url + user.data.id)
-        .set('Cookie', user.cookie)
-        .expect(200)
-        .then(res => {
-          assert.property(res.body, 'data')
-        })
-    })
-  })
-
-  describe ('POST users/signup', () => {
+  describe('POST users/signup', () => {
     const url = '/api/users/signup'
     const reqBody = {
       email: 'test@test.com',
@@ -114,14 +23,14 @@ describe ('user routes', () => {
       csrf = await util.authUser(app)
     })
 
-    it ('requires csrf token', async () => {
+    it('requires csrf token', async () => {
       return request(app)
         .post(url)
         .set('Cookie', csrf.cookie)
         .expect(401)
     })
 
-    it ('requires body', () => {
+    it('requires body', () => {
       return request(app)
         .post(url)
         .set('Cookie', csrf.cookie)
@@ -132,7 +41,7 @@ describe ('user routes', () => {
         })
     })
 
-    it ('validates body', () => {
+    it('validates body', () => {
       const body = Object.assign({}, reqBody, {email: 'invalid'})
       return request(app)
         .post(url)
@@ -145,7 +54,7 @@ describe ('user routes', () => {
         })
     })
 
-    it ('returns errors on duplicate email', async () => {
+    it('returns errors on duplicate email', async () => {
       await db.users.add({
         email: reqBody.email,
         password: 'testpassword',
@@ -164,7 +73,7 @@ describe ('user routes', () => {
         })
     })
 
-    it ('stores in database and hashes password', () => {
+    it('stores in database and hashes password', () => {
       return request(app)
         .post(url)
         .send(reqBody)
@@ -182,7 +91,7 @@ describe ('user routes', () => {
         })
     })
 
-    it ('returns 200 with user data', () => {
+    it('returns 200 with user data', () => {
       return request(app)
         .post(url)
         .send(reqBody)
@@ -197,7 +106,7 @@ describe ('user routes', () => {
     })
   })
 
-  describe ('POST users/login', () => {
+  describe('POST users/login', () => {
     const url = '/api/users/login'
     const reqBody = {
       email: 'test@test.com',
@@ -209,14 +118,14 @@ describe ('user routes', () => {
       csrf = await util.authUser(app)
     })
 
-    it ('requires csrf token', async () => {
+    it('requires csrf token', async () => {
       return request(app)
         .post(url)
         .set('Cookie', csrf.cookie)
         .expect(401)
     })
 
-    it ('requires request body', () => {
+    it('requires request body', () => {
       return request(app)
         .post(url)
         .set('Cookie', csrf.cookie)
@@ -227,7 +136,7 @@ describe ('user routes', () => {
         })
     })
 
-    it ('validates body', () => {
+    it('validates body', () => {
       const body = Object.assign({}, reqBody, {email: ''})
       return request(app)
         .post(url)
@@ -240,7 +149,7 @@ describe ('user routes', () => {
         })
     })
 
-    it ('returns errors when user is not in db', () => {
+    it('returns errors when user is not in db', () => {
       return request(app)
         .post(url)
         .send(reqBody)
@@ -252,7 +161,7 @@ describe ('user routes', () => {
         })
     })
 
-    it ('returns 200 with user data', async () => {
+    it('returns 200 with user data', async () => {
       await request(app)
         .post('/api/users/signup')
         .set('Cookie', csrf.cookie)
@@ -273,19 +182,19 @@ describe ('user routes', () => {
     })
   })
 
-  describe ('POST users/:id', () => {
+  describe('POST users/:id', () => {
     const url = id => `/api/users/${id}`
     const updatedUser = {
       email: 'newemail@test.com'
     }
 
-    it ('checks csrf', async () => {
+    it('checks csrf', async () => {
       return request(app)
         .post(url(1))
         .expect(401)
     })
 
-    it ('checks authentication', async () => {
+    it('checks authentication', async () => {
       const csrf = await util.authUser(app)
       return request(app)
         .post(url(0))
@@ -294,7 +203,7 @@ describe ('user routes', () => {
         .expect(401)
     })
 
-    it ('validates body', async () => {
+    it('validates body', async () => {
       const csrf = await util.authUser(app)
       const user = await util.addUser(app)
       return request(app)
@@ -308,7 +217,7 @@ describe ('user routes', () => {
         })
     })
 
-    it ('returns 404 if user does not exist', async () => {
+    it('returns 404 if user does not exist', async () => {
       const csrf = await util.authUser(app)
       const user = await util.addUser(app)
       return request(app)
@@ -319,7 +228,7 @@ describe ('user routes', () => {
         .expect(404)
     })
     
-    it ('checks permission', async () => {
+    it('checks permission', async () => {
       const csrf = await util.authUser(app)
       const {user1, user2} = await util.addTwoUsers(app)
       return request(app)
@@ -330,7 +239,7 @@ describe ('user routes', () => {
         .expect(403)
     })
 
-    it ('changes email', async () => {
+    it('changes email', async () => {
       const csrf = await util.authUser(app)
       const user = await util.addUser(app)
       return request(app)
@@ -347,7 +256,7 @@ describe ('user routes', () => {
         })
     })
 
-    it ('changes name', async () => {
+    it('changes name', async () => {
       const csrf = await util.authUser(app)
       const user = await util.addUser(app)
       return request(app)
@@ -366,16 +275,16 @@ describe ('user routes', () => {
     })
   })
 
-  describe ('POST users/auth', () => {
+  describe('POST users/auth', () => {
     const url = '/api/users/auth'
 
-    it ('returns 401 with csrf token when user is not logged in', () => {
+    it('returns 401 with csrf token when user is not logged in', () => {
       return request(app)
         .post(url)
         .expect(401)
     })
 
-    it ('returns 200 with data and csrf token when user is logged in', async () => {
+    it('returns 200 with data and csrf token when user is logged in', async () => {
       const user = await util.addUser(app)
 
       return request(app)
@@ -388,16 +297,16 @@ describe ('user routes', () => {
     })
   })
 
-  describe ('POST users/:id/logout', () => {
+  describe('POST users/:id/logout', () => {
     const url = id => `/api/users/${id}/logout`
 
-    it ('checks csrf', () => {
+    it('checks csrf', () => {
       return request(app)
         .post(url(0))
         .expect(401)
     })
 
-    it ('checks authentication', async () => {
+    it('checks authentication', async () => {
       const csrf = await util.authUser(app)
       return request(app)
         .post(url(0))
@@ -406,7 +315,7 @@ describe ('user routes', () => {
         .expect(401)
     })
 
-    it ('returns 404 if user does not exist', async () => {
+    it('returns 404 if user does not exist', async () => {
       const csrf = await util.authUser(app)
       const user = await util.addUser(app)
       return request(app)
@@ -416,7 +325,7 @@ describe ('user routes', () => {
         .expect(404)
     })
 
-    it ('checks permission', async () => {
+    it('checks permission', async () => {
       const csrf = await util.authUser(app)
       const {user1, user2} = await util.addTwoUsers(app)
       return request(app)
@@ -426,7 +335,7 @@ describe ('user routes', () => {
         .expect(403)
     })
 
-    it ('returns 204 on success', async () => {
+    it('returns 204 on success', async () => {
       const csrf = await util.authUser(app)
       const user = await util.addUser(app)
       return request(app)
@@ -440,17 +349,17 @@ describe ('user routes', () => {
     })
   })
 
-  describe ('POST users/:id/password', () => {
+  describe('POST users/:id/password', () => {
     const url = id => `/api/users/${id}/password`
     const newPass = 'newpassword'
 
-    it ('checks csrf', () => {
+    it('checks csrf', () => {
       return request(app)
         .post(url(0))
         .expect(401)
     })
 
-    it ('checks authentication', async () => {
+    it('checks authentication', async () => {
       const csrf = await util.authUser(app)
       return request(app)
         .post(url(0))
@@ -459,7 +368,7 @@ describe ('user routes', () => {
         .expect(401)
     })
 
-    it ('validates body', async () => {
+    it('validates body', async () => {
       const csrf = await util.authUser(app)
       const user = await util.addUser(app)
       return request(app)
@@ -473,7 +382,7 @@ describe ('user routes', () => {
         })
     })
 
-    it ('checks if user exists', async () => {
+    it('checks if user exists', async () => {
       const csrf = await util.authUser(app)
       const user = await util.addUser(app)
       return request(app)
@@ -484,7 +393,7 @@ describe ('user routes', () => {
         .expect(404)
     })
 
-    it ('checks permission', async () => {
+    it('checks permission', async () => {
       const csrf = await util.authUser(app)
       const {user1, user2} = await util.addTwoUsers(app)
       return request(app)
@@ -495,7 +404,7 @@ describe ('user routes', () => {
         .expect(403)
     })
 
-    it ('returns 204 on success', async () => {
+    it('returns 204 on success', async () => {
       const csrf = await util.authUser(app)
       const user = await util.addUser(app)
       const oldUser = await db.users.findById(user.data.id)
@@ -515,16 +424,16 @@ describe ('user routes', () => {
     })
   })
 
-  describe ('DELETE /users/:id', () => {
+  describe('DELETE /users/:id', () => {
     const url = id => `/api/users/${id}`
 
-    it ('checks csrf', () => {
+    it('checks csrf', () => {
       return request(app)
         .delete(url(0))
         .expect(401)
     })
 
-    it ('checks authentication', async () => {
+    it('checks authentication', async () => {
       const csrf = await util.authUser(app)
       return request(app)
         .delete(url(0))
@@ -533,7 +442,7 @@ describe ('user routes', () => {
         .expect(401)
     })
 
-    it ('checks if user exists', async () => {
+    it('checks if user exists', async () => {
       const csrf = await util.authUser(app)
       const user = await util.addUser(app)
       return request(app)
@@ -543,7 +452,7 @@ describe ('user routes', () => {
         .expect(404)
     })
 
-    it ('checks permission', async () => {
+    it('checks permission', async () => {
       const csrf = await util.authUser(app)
       const {user1, user2} = await util.addTwoUsers(app)
       return request(app)
@@ -553,7 +462,7 @@ describe ('user routes', () => {
         .expect(403)
     })
 
-    it ('returns 204 on success and clears cookie', async () => {
+    it('returns 204 on success and clears cookie', async () => {
       const csrf = await util.authUser(app)
       const user = await util.addUser(app)
       return request(app)

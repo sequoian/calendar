@@ -1,8 +1,8 @@
 const router = require('express').Router()
 const db = require('../../db')
-const validate = require('../../validation').signup
-const jwt = require('../../security/jwt')
-const checkCsrf = require('../../security/check-csrf')
+const validate = require('../validate/index').signup
+const jwt = require('../../util/jwt')
+const checkCsrf = require('../../middleware/check-csrf')
 
 const validateInputs = async (req, res, next) => {
   const errors = validate(req.body)

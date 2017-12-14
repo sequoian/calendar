@@ -1,4 +1,4 @@
-const jwt = require('./jwt')
+const jwt = require('../util/jwt')
 const db = require('../db')
 const {AuthenticationError} = require('../errors')
 

@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const db = require('../../db')
-const jwt = require('../../security/jwt')
-const csrf = require('../../security/csrf')
+const jwt = require('../../util/jwt')
+const csrf = require('../../util/csrf')
 
 router.post('/users/auth', async (req, res) => {
   const userToken = req.signedCookies.user
@@ -15,11 +15,7 @@ router.post('/users/auth', async (req, res) => {
   else {
     return res.status(200).json({
       data: {
-        user: {
-          id: user.id,
-          email: user.email,
-          name: user.name
-        }
+        user
       }
     })
   }
