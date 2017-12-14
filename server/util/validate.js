@@ -1,0 +1,1 @@
+exports.exists = value => typeof value !== 'undefined' && value !== null
