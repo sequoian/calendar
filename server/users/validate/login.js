@@ -1,15 +1,14 @@
-const test = require('./validate')
+const {isEmpty} = require('validator')
 
 const validate = value => {
-  if (!test.exists(value)) {
-    return 'Required'
+  try {
+    if (isEmpty(value)) {
+      return 'Required'
+    }
+  } catch (error) {
+    return 'Invalid'
   }
-  if (!test.isString(value)) {
-    return 'Must be a string'
-  }
-  if (test.isEmpty(value)) {
-    return 'Required'
-  }
+
   return null
 }
 

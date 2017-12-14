@@ -4,8 +4,8 @@ const {
   validateEmail,
   validatePassword,
   validateName
-} = require('../../validation/fields/signup')
-const validateSignup = require('../../validation/signup')
+} = require('../../validate/fields/signup')
+const validateSignup = require('../../validate/signup')
 
 describe('signup validation', () => {
 
@@ -35,7 +35,7 @@ describe('signup validation', () => {
     // tests
     it('email', async () => {
       const val = validateEmail
-      expect(() => val(null)).to.throw
+      expect(await val(null)).to.be.string
       expect(await val('')).to.be.string
       expect(await val('test')).to.be.string
       expect(await val('test@test')).to.be.string
@@ -48,7 +48,7 @@ describe('signup validation', () => {
     it('password', () => {
       const validPassword = 'testpassword'
       const val = validatePassword
-      expect(() => val(null)).to.throw
+      expect(val(null)).to.be.string
       expect(val('')).to.be.string
       expect(val('pass')).to.be.string
       expect(val(validPassword)).to.be.null
@@ -56,7 +56,7 @@ describe('signup validation', () => {
 
     it('name', () => {
       const val = validateName
-      expect(() => val(null)).to.throw
+      expect(val(null)).to.be.string
       expect(val('   ')).to.be.string
       expect(val('Bob')).to.be.null
       expect(val('A')).to.be.null
@@ -80,13 +80,6 @@ describe('signup validation', () => {
 
     it('valid form', async () => {
       expect(await val(validForm)).to.be.empty
-    })
-
-    it('trims strings', async () => {
-      const untrimmed = '  Joe  '
-      const form = Object.assign({}, validForm, {name: untrimmed})
-      await val(form)
-      expect(form.name).to.equal('Joe')
     })
   })
 })
