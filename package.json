@@ -12,7 +12,7 @@
     "node": "8.9.1"
   },
   "scripts": {
-    "test": "mocha server/users/test/models/models.test.js"
+    "test": "mocha server/users/test/validation/signup.test.js"
   },
   "dependencies": {
     "bcrypt": "^1.0.3",
@@ -21,7 +21,8 @@
     "dotenv": "^4.0.0",
     "express": "^4.16.2",
     "jsonwebtoken": "^8.1.0",
-    "pg-promise": "^7.3.2"
+    "pg-promise": "^7.3.2",
+    "validator": "^9.2.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",

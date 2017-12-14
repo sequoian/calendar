@@ -1,49 +1,44 @@
-const test = require('./validate')
+const {
+  validateEmail,
+  validatePassword,
+  validateName
+} = require('./fields/signup')
 
-const validateEmail = email => {
-  if (!test.exists(email)) {
-    return 'Required'
-  }
-  if (!test.isString(email)) {
-    return 'Must be a string'
-  }
-  if (test.isEmpty(email)) {
-    return 'Requried'
-  }
-  email = email.trim()
-  if (!test.validEmail(email)) {
-    return 'Please use a valid email'
-  }
-  return null
-}
-
-const validatePassword = password => {
-  if (!test.exists(password)) {
-    return 'Required'
-  }
-  if (!test.isString(password)) {
-    return 'Must be a string'
-  }
-  if (test.isEmpty(password)) {
-    return 'Required'
-  }
-  if (password.length < 6) {
-    return 'Must be at least 6 characters long'
-  }
-  return null
-}
-
-const validateSignup = values => {
+const validateSignup = async values => {
   const errors = {}
 
-  let error = validateEmail(values.email)
+  let error
+  
+  // email
+  try {
+    error = await validateEmail(values.email)
+    values.email = values.email.trim()
+  } catch (e) {
+    error = 'Invalid'
+  }
   if (error) {
     errors.email = error
   }
 
-  error = validatePassword(values.password)
+  // password
+  try {
+    error = validatePassword(values.password)
+  } catch (e) {
+    error = 'Invalid'
+  }
   if (error) {
     errors.password = error
+  }
+
+  // name
+  try {
+    error = validateName(values.name)
+    values.name = values.name.trim()
+  } catch (e) {
+    error = 'Invalid'
+  }
+  if (error) {
+    errors.name = error
   }
 
   return errors
