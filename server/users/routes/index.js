@@ -4,7 +4,7 @@ const router = require('express').Router()
 router.use('/', [
   require('./get'),
   require('./signup'),
-  // require('./login'),
+  require('./login'),
   require('./auth'),
   // require('./update'),
   // require('./logout'),

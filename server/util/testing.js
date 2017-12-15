@@ -28,7 +28,8 @@ const authUser = (app) => {
 const addUser = async (app, user) => {
   const body = user || {
     email: 'test@test.com',
-    password: 'testpassword'
+    password: 'testpassword',
+    name: ''
   }
 
   const csrf = await authUser(app)
