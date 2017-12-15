@@ -85,7 +85,7 @@ describe('user GET routes', () => {
         .set('Cookie', user.cookie)
         .expect(200)
         .then(res => {
-          expect(res.body).has.property('data')
+          expect(res.body.data).to.exist
         })
     })
   })
