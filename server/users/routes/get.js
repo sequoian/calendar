@@ -7,7 +7,7 @@ const {
   ValidationError
 } = require('../../errors')
 
-router.get('/users', async (req, res) => {
+router.get('/users', async (req, res, next) => {
   const email = req.query.email
   if (!email) {
     return next(new ValidationError)

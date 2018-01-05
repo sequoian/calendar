@@ -5,7 +5,7 @@ const db = require('../../../db')
 const util = require('../../../util/testing')
 const app = util.prepareApp(routes)
 
-describe.only('user auth routes', () => {
+describe('user auth routes', () => {
   beforeEach('clear users', () => {
     return db.users.clearTable()
   })
@@ -168,7 +168,7 @@ describe.only('user auth routes', () => {
         .set('X-CSRF-TOKEN', csrf.token)
         .expect(204)
         .then(res => {
-          assert.exists(res.header['set-cookie'])
+          expect(res.header['set-cookie']).to.exist
         })
     })
   })

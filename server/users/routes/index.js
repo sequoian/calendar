@@ -7,7 +7,7 @@ router.use('/', [
   require('./login'),
   require('./auth'),
   // require('./update'),
-  // require('./logout'),
+  require('./logout'),
   // require('./delete')
 ])
 

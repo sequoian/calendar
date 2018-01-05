@@ -53,7 +53,8 @@ const addTwoUsers = async app => {
   const user1 = await addUser(app)
   const user2 = await addUser(app, {
     email: 'second@test.com',
-    password: 'testingsecond'
+    password: 'testingsecond',
+    name: ''
   })
 
   return {
