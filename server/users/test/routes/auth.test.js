@@ -172,4 +172,26 @@ describe('user auth routes', () => {
         })
     })
   })
+
+  describe('POST users/auth', () => {
+    const url = '/api/users/auth'
+
+    it('returns 401 with csrf token when user is not logged in', () => {
+      return request(app)
+        .post(url)
+        .expect(401)
+    })
+
+    it('returns 200 with data and csrf token when user is logged in', async () => {
+      const user = await util.addUser(app)
+
+      return request(app)
+        .post(url)
+        .set('Cookie', user.cookie)
+        .expect(200)
+        .then(res => {
+          expect(res.body.data).to.exist
+        })
+    })
+  })
 })

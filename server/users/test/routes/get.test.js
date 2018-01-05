@@ -5,7 +5,7 @@ const db = require('../../../db')
 const util = require('../../../util/testing')
 const app = util.prepareApp(routes)
 
-describe.only('user GET routes', () => {
+describe('user GET routes', () => {
   beforeEach('clear users', () => {
     return db.users.clearTable()
   })
