@@ -11,39 +11,6 @@ const {
   ValidationError
 } = require('../../errors')
 
-const updateUser = async (req, res, next) => {
-  
-}
-
-const updateUserPassword = async (req, res, next) => {
-  const password = req.body.password
-  const userId = req.params.id
-
-  let user
-  try {
-    user = await db.users.findById(userId)
-    if (!user) {
-      return res.status(404).end()
-    }
-  } catch (error) {
-    return next(error)
-  }
-
-  if (user.id !== req.user.id) {
-    return res.status(403).end()
-  }
-
-  try {
-    const result = await db.users.updatePassword(user.id, password)
-    if (result !== 1) {
-      return res.status(500).end()
-    }
-    return res.status(204).end()
-  } catch (error) {
-    return next(error)
-  }
-}
-
 // Updates user information other than password.
 // Accepts 1 or more properties to be updated
 router.post('/users/:id', [
@@ -97,7 +64,34 @@ router.post('/users/:id/password', [
   checkCsrf,
   checkAuth,
   validatePassword,
-  updateUserPassword
+  async (req, res, next) => {
+    const password = req.body.password
+    const userId = req.params.id
+  
+    let user
+    try {
+      user = await db.users.findById(userId)
+      if (!user) {
+        return next(new NotFoundError)
+      }
+    } catch (error) {
+      return next(error)
+    }
+  
+    if (user.id !== req.user.id) {
+      return next(new PermissionError)
+    }
+  
+    try {
+      const result = await db.users.updatePassword(user.id, password)
+      if (result !== 1) {
+        throw new Error
+      }
+      return res.status(204).end()
+    } catch (error) {
+      return next(error)
+    }
+  }
 ])
 
 module.exports = router
