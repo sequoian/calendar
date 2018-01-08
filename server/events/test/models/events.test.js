@@ -34,17 +34,17 @@ describe('events repo', () => {
 
   let event
 
-  it ('add event', async () => {
+  it('add event', async () => {
     event = await db.events.add(appt)
     assert.isObject(appt)
   })
 
-  it ('find by id', async () => {
+  it('find by id', async () => {
     const result = await db.events.findById(event.id)
     assert.isObject(result)
   })
 
-  it ('update event', async () => {
+  it('update event', async () => {
     const newTime = '7:00'
     const updated = Object.assign({}, event, {time: newTime})
     event = await db.events.update(updated)
@@ -52,13 +52,13 @@ describe('events repo', () => {
     assert.strictEqual(event.time, newTime)
   })
   
-  it ('all user events', async () => {
+  it('all user events', async () => {
     await db.events.add(unscheduled)
     const events = await db.events.findAllByUser(owner.id)
     assert.lengthOf(events, 2)
   })
 
-  it ('remove event', async () => {
+  it('remove event', async () => {
     const result = await db.events.remove(event.id)
     assert.strictEqual(result, 1)
     const e = await db.events.findById(event.id)
