@@ -1,5 +1,5 @@
 const assert = require('chai').assert
-const db = require('..')
+const db = require('../../../db')
 
 const appt = {
   title: 'Dentist Appointment',

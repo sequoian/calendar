@@ -108,8 +108,6 @@ describe('user update routes', () => {
           expect(user.data.email).to.equal(u.email)
         })
     })
-
-    it('accepts current email')
   })
 
 
