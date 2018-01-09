@@ -159,7 +159,7 @@ describe('event routes', () => {
     })
   })
 
-  describe.only('POST events/:id', () => {
+  describe('POST events/:id', () => {
     const url = id => `/api/events/${id}`
 
     it('checks csrf', () => {
@@ -235,7 +235,7 @@ describe('event routes', () => {
     })
   })
 
-  describe('DELETE events/:id', () => {
+  describe.only('DELETE events/:id', () => {
     const url = id => `/api/events/${id}`
 
     it('checks csrf', () => {

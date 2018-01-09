@@ -1,7 +1,11 @@
 const router = require('express').Router()
 const db = require('../../db')
-const checkCsrf = require('../../security/check-csrf')
-const checkAuth = require('../../security/user-auth')
+const checkCsrf = require('../../middleware/check-csrf')
+const checkAuth = require('../../middleware/check-auth')
+const {
+  NotFoundError,
+  PermissionError
+} = require('../../errors')
 
 router.delete('/events/:id', [
   checkCsrf,
@@ -13,14 +17,14 @@ router.delete('/events/:id', [
     try {
       event = await db.events.findById(eventId)
       if (!event) {
-        return res.status(404).end()
+        return next(new NotFoundError)
       }
     } catch (e) {
       return next(e)
     }
 
     if (event.owner !== req.user.id) {
-      return res.status(403).end()
+      return next(new PermissionError)
     }
 
     try {
