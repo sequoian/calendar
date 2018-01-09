@@ -67,7 +67,12 @@ const prepareApp = routes => {
   const app = express()
   app.use(bodyParser.json())
   app.use(cookieParser(process.env.COOKIE_KEY))
-  app.use('/api', routes)
+  if (Array.isArray(routes)) {
+    routes.forEach(r => app.use('/api', r))
+  }
+  else {
+    app.use('/api', routes)
+  }
   app.use(errorMiddleware)
   return app
 }

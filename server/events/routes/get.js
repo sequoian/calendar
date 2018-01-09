@@ -1,12 +1,15 @@
 const router = require('express').Router()
 const db = require('../../db')
-const checkAuth = require('../../security/user-auth')
+const checkAuth = require('../../middleware/check-auth')
+const {
+  NotFoundError,
+  PermissionError
+} = require('../../errors')
 
 router.get('/events', [
   checkAuth,
   async (req, res, next) => {
     const user = req.user
-
     try {
       const events = await db.events.findAllByUser(user.id)
       return res.status(200).json({
@@ -30,14 +33,14 @@ router.get('/events/:id', [
     try {
       event = await db.events.findById(eventId)
       if (!event) {
-        return res.status(404).end()
+        return next(new NotFoundError)
       }
     } catch (e) {
       return next(e)
     }
 
     if (event.owner !== user.id) {
-      return res.status(403).end()
+      return next(new PermissionError)
     }
 
     return res.status(200).json({

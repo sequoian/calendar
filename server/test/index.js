@@ -17,7 +17,7 @@ const recursiveReadDir = (dir) => {
   return files
 }
 
-const testDir = path.join(__dirname, '../events/test/validation')
+const testDir = path.join(__dirname, '..')
 
 recursiveReadDir(testDir).filter(file => {
   // only use files that match *.test.js

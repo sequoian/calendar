@@ -1,16 +1,10 @@
 const request = require('supertest')
 const expect = require('chai').expect
-const app = require('express')()
-const routes = require('..')
-const db = require('../../db')
-const bodyParser = require('body-parser')
-const cookieParser = require('cookie-parser')
-const util = require('./util')
-
-// Prepare app
-app.use(bodyParser.json())
-app.use(cookieParser(process.env.COOKIE_KEY))
-app.use('/', routes)
+const eventRoutes = require('../../routes')
+const userRoutes = require('../../../users/routes')
+const db = require('../../../db')
+const util = require('../../../util/testing')
+const app = util.prepareApp([userRoutes, eventRoutes])
 
 const validEvent = {
   title: 'Dentist Appointment',
@@ -32,22 +26,22 @@ const addEvent = (title, owner) => {
   })
 }
 
-describe ('event routes', () => {
+describe('event routes', () => {
   beforeEach('clear tables', async () => {
     await db.users.clearTable()
     await db.events.clearTable()
   })
 
-  describe ('GET events', () => {
+  describe('GET events', () => {
     const url = '/api/events'
 
-    it ('checks authentication', () => {
+    it('checks authentication', () => {
       return request(app)
         .get(url)
         .expect(401)
     })
 
-    it ('gets all events belonging to user', async () => {
+    it('gets all events belonging to user', async () => {
       const user = await util.addUser(app)
       await addEvent('Test', user.data.id)
 
@@ -61,7 +55,7 @@ describe ('event routes', () => {
         })
     })
 
-    it ('returns empty array when no events', async () => {
+    it('returns empty array when no events', async () => {
       const user = await util.addUser(app)
 
       return request(app)
@@ -75,16 +69,16 @@ describe ('event routes', () => {
     })
   })
 
-  describe ('GET events/:id', () => {
+  describe.only('GET events/:id', () => {
     const url = id => `/api/events/${id}`
 
-    it ('checks authentication', () => {
+    it('checks authentication', () => {
       return request(app)
         .get(url(0))
         .expect(401)
     })
 
-    it ('checks if event exists', async () => {
+    it('checks if event exists', async () => {
       const user = await util.addUser(app)
 
       return request(app)
@@ -93,7 +87,7 @@ describe ('event routes', () => {
         .expect(404)
     })
 
-    it ('checks permission', async () => {
+    it('checks permission', async () => {
       const {user1, user2} = await util.addTwoUsers(app)
       const event = await addEvent('Test', user1.data.id)
 
@@ -103,7 +97,7 @@ describe ('event routes', () => {
         .expect(403)
     })
 
-    it ('gets event', async () => {
+    it('gets event', async () => {
       const user = await util.addUser(app)
       const event = await addEvent('Test', user.data.id)
       
@@ -117,16 +111,16 @@ describe ('event routes', () => {
     })
   })
 
-  describe ('POST events', () => {
+  describe('POST events', () => {
     const url = '/api/events'
 
-    it ('checks csrf', () => {
+    it('checks csrf', () => {
       return request(app)
         .post(url)
         .expect(401)
     })
 
-    it ('checks authentication', async () => {
+    it('checks authentication', async () => {
       const csrf = await util.authUser(app)
       return request(app)
         .post(url)
@@ -135,7 +129,7 @@ describe ('event routes', () => {
         .expect(401)
     })
 
-    it ('validates body', async () => {
+    it('validates body', async () => {
       const csrf = await util.authUser(app)
       const user = await util.addUser(app)
       return request(app)
@@ -149,7 +143,7 @@ describe ('event routes', () => {
         })
     })
 
-    it ('adds event to db', async () => {
+    it('adds event to db', async () => {
       const csrf = await util.authUser(app)
       const user = await util.addUser(app)
       return request(app)
@@ -165,16 +159,16 @@ describe ('event routes', () => {
     })
   })
 
-  describe ('POST events/:id', () => {
+  describe('POST events/:id', () => {
     const url = id => `/api/events/${id}`
 
-    it ('checks csrf', () => {
+    it('checks csrf', () => {
       return request(app)
         .post(url(0))
         .expect(401)
     })
 
-    it ('checks authentication', async () => {
+    it('checks authentication', async () => {
       const csrf = await util.authUser(app)
       return request(app)
         .post(url(0))
@@ -183,7 +177,7 @@ describe ('event routes', () => {
         .expect(401)
     })
 
-    it ('validates body', async () => {
+    it('validates body', async () => {
       const csrf = await util.authUser(app)
       const user = await util.addUser(app)
       return request(app)
@@ -197,7 +191,7 @@ describe ('event routes', () => {
         })
     })
 
-    it ('checks if event exists', async () => {
+    it('checks if event exists', async () => {
       const csrf = await util.authUser(app)
       const user = await util.addUser(app)
       return request(app)
@@ -208,7 +202,7 @@ describe ('event routes', () => {
         .expect(404)
     })
 
-    it ('checks permission', async () => {
+    it('checks permission', async () => {
       const csrf = await util.authUser(app)
       const {user1, user2} = await util.addTwoUsers(app)
       const title = 'Test'
@@ -221,7 +215,7 @@ describe ('event routes', () => {
         .expect(403)
     })
 
-    it ('updates event in db', async () => {
+    it('updates event in db', async () => {
       const csrf = await util.authUser(app)
       const user = await util.addUser(app)
       const title = 'Test'
@@ -241,16 +235,16 @@ describe ('event routes', () => {
     })
   })
 
-  describe ('DELETE events/:id', () => {
+  describe('DELETE events/:id', () => {
     const url = id => `/api/events/${id}`
 
-    it ('checks csrf', () => {
+    it('checks csrf', () => {
       return request(app)
         .delete(url(0))
         .expect(401)
     })
 
-    it ('checks authentication', async () => {
+    it('checks authentication', async () => {
       const csrf = await util.authUser(app)
       return request(app)
         .delete(url(0))
@@ -259,7 +253,7 @@ describe ('event routes', () => {
         .expect(401)
     })
 
-    it ('checks if event exists', async () => {
+    it('checks if event exists', async () => {
       const csrf = await util.authUser(app)
       const user = await util.addUser(app)
       const event = await addEvent('Test', user.data.id)
@@ -270,7 +264,7 @@ describe ('event routes', () => {
         .expect(404)
     })
 
-    it ('checks permission', async () => {
+    it('checks permission', async () => {
       const csrf = await util.authUser(app)
       const {user1, user2} = await util.addTwoUsers(app)
       const event = await addEvent('Test', user1.data.id)
@@ -281,7 +275,7 @@ describe ('event routes', () => {
         .expect(403)
     })
 
-    it ('deletes event from db', async () => {
+    it('deletes event from db', async () => {
       const csrf = await util.authUser(app)
       const user = await util.addUser(app)
       const event = await addEvent('Test', user.data.id)
