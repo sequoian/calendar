@@ -8,20 +8,20 @@ const app = util.prepareApp([userRoutes, eventRoutes])
 
 const validEvent = {
   title: 'Dentist Appointment',
-  day: 'January 25, 2018',
+  day: '2018-01-18',
   time: '2:30',
   location: 'Dentist Office',
   description: ':('
 }
-const invalidEvent = Object.assign({}, validEvent, {title: null})
+const invalidEvent = Object.assign({}, validEvent, {title: ''})
 
 const addEvent = (title, owner) => {
   return db.events.add({
     title,
     owner,
-    day: 'January 1, 2018',
+    day: '2018-01-01',
     time: '00:00',
-    location: null,
+    location: '',
     description: 'Testing'
   })
 }
@@ -69,7 +69,7 @@ describe('event routes', () => {
     })
   })
 
-  describe.only('GET events/:id', () => {
+  describe('GET events/:id', () => {
     const url = id => `/api/events/${id}`
 
     it('checks authentication', () => {
@@ -159,7 +159,7 @@ describe('event routes', () => {
     })
   })
 
-  describe('POST events/:id', () => {
+  describe.only('POST events/:id', () => {
     const url = id => `/api/events/${id}`
 
     it('checks csrf', () => {

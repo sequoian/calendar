@@ -1,22 +1,20 @@
 const router = require('express').Router()
 const db = require('../../db')
-const checkCsrf = require('../../security/check-csrf')
-const checkAuth = require('../../security/user-auth')
-const validate = require('../../validation').events
+const checkCsrf = require('../../middleware/check-csrf')
+const checkAuth = require('../../middleware/check-auth')
+const validate = require('../../middleware/validate')
+const validateBody = validate(require('../validation'))
+const {
+  NotFoundError,
+  PermissionError
+} = require('../../errors')
 
 router.post('/events', [
   checkCsrf,
   checkAuth,
+  validateBody,
   async (req, res, next) => {
     const event = req.body
-    // validate
-    const errors = validate(event)
-    if (Object.keys(errors).length > 0) {
-      return res.status(400).json({
-        errors
-      })
-    }
-
     // add to db
     event.owner = req.user.id
     try {
@@ -35,15 +33,9 @@ router.post('/events', [
 router.post('/events/:id', [
   checkCsrf,
   checkAuth,
+  validateBody,
   async (req, res, next) => {
     const body = req.body
-    // validate
-    const errors = validate(body)
-    if (Object.keys(errors).length > 0) {
-      return res.status(400).json({
-        errors
-      })
-    }
 
     // check if exists
     const eventId = req.params.id
@@ -51,7 +43,7 @@ router.post('/events/:id', [
     try {
       event = await db.events.findById(eventId)
       if (!event) {
-        return res.status(404).end()
+        return next(new NotFoundError)
       }
     } catch (e) {
       return next(e)
@@ -59,7 +51,7 @@ router.post('/events/:id', [
 
     // check permission
     if (event.owner !== req.user.id) {
-      return res.status(403).end()
+      return next(new PermissionError)
     }
 
     // update
