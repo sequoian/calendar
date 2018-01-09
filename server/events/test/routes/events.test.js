@@ -235,7 +235,7 @@ describe('event routes', () => {
     })
   })
 
-  describe.only('DELETE events/:id', () => {
+  describe('DELETE events/:id', () => {
     const url = id => `/api/events/${id}`
 
     it('checks csrf', () => {
