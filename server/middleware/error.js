@@ -12,6 +12,7 @@ const errorHandler = (err, req, res, next) => {
     case 'NotFoundError':
       return res.status(404).end()
     default:
+      console.log(err)
       return res.status(500).end()
   }
 }

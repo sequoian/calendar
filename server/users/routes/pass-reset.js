@@ -1,7 +1,10 @@
 const router = require('express').Router()
 const db = require('../../db')
 const checkCsrf = require('../../middleware/check-csrf')
-const email = require('../../util/email')
+const {
+  createTransporter,
+  mailOptions,
+} = require('../../util/email')
 const validate = require('../../middleware/validate')
 const validatePassword = validate(require('../validate').updatePassword)
 const {
@@ -47,8 +50,8 @@ router.post('/reset-password/confirm', [
       const reset = await db.passreset.initReset(user.id)
 
       // send email
-      const transporter = email.createTransporter()
-      const options = email.mailOptions.passwordReset(user.email, reset.id)
+      const transporter = createTransporter()
+      const options = mailOptions.passwordReset(user.email, reset.id)
       transporter.sendMail(options, (err, info) => {
         if (err) return next(e)
         // success
