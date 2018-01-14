@@ -7,7 +7,7 @@ const validUser = {
   password: 'abc123'
 }
 
-describe.only('password reset model', () => {
+describe('password reset model', () => {
   let user
 
   // hooks

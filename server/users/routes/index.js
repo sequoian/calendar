@@ -8,7 +8,8 @@ router.use('/', [
   require('./auth'),
   require('./update'),
   require('./logout'),
-  require('./delete')
+  require('./delete'),
+  require('./pass-reset')
 ])
 
 module.exports = router

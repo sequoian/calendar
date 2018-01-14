@@ -2,6 +2,8 @@ const router = require('express').Router()
 const db = require('../../db')
 const checkCsrf = require('../../middleware/check-csrf')
 const email = require('../../util/email')
+const validate = require('../../middleware/validate')
+const validatePassword = validate(require('../validate').updatePassword)
 const {
   PermissionError,
   NotFoundError,
@@ -57,3 +59,30 @@ router.post('/reset-password/confirm', [
     }
   }
 ])
+
+router.post('/reset-password/update', [
+  checkCsrf,
+  validatePassword,
+  async (req, res, next) => {
+    const id = req.query.id
+    const {password} = req.body
+
+    if (!id) {
+      return next(new ValidationError)
+    }
+
+    try {
+      const result = await db.passreset.findById(id)
+      if (!result) {
+        return next(new NotFoundError)
+      }
+      await db.users.updatePassword(result.user_id, password)
+      return res.status(204).end()
+    } catch (e) {
+      return next(e)
+    }
+
+  }
+])
+
+module.exports = router
