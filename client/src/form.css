@@ -14,3 +14,7 @@
 .repeat-options input{
   display: inline;
 }
+
+input[type=number] {
+  width: 40px;
+}

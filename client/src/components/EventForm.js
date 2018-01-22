@@ -52,6 +52,7 @@ const EventForm = ({title, day, time, details, update, updateDay}) => (
       value={title}
       onChange={update}
       placeholder="Title"
+      autoFocus
     />
     <DatePicker
       name="day"
