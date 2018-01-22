@@ -4,11 +4,12 @@ import moment from 'moment'
 
 class App extends Component {
   render() {
-    const now = moment('2018-01-10')
+    const now = moment()
     return (
       <div className="App">
         <EventForm 
           day={now}
+          time={now.format('h:mma')}
         />
       </div>
     )
