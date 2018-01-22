@@ -32,7 +32,6 @@ class App extends Component {
   }
 
   render() {
-    const now = moment()
     return (
       <div className="App">
         <button
@@ -43,10 +42,7 @@ class App extends Component {
           style={modalStyle}
           onRequestClose={this.closeModal}
         >
-        <EventForm 
-          day={now}
-          time={now.format('h:mma')}
-        />
+        <EventForm />
         </Modal>
         
       </div>

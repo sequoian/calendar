@@ -16,6 +16,8 @@ class EventFormContainer extends Component {
       details: this.props.description || ''
     }
     this.update = this.update.bind(this)
+    this.updateDay = this.updateDay.bind(this)
+    this.formatTime = this.formatTime.bind(this)
   }
 
   update(event) {
@@ -25,10 +27,30 @@ class EventFormContainer extends Component {
     })
   }
 
-  updateDay(event) {
+  updateDay(value) {
     this.setState({
-      day: event.target.value
+      day: value
     })
+  }
+
+  formatTime(event) {
+    const {value} = event.target
+    const newTime = moment(value, [
+      'h:mma',
+      'hmma',
+      'H:mm',
+      'Hmm'
+    ])
+    if (newTime.isValid()) {
+      this.setState({
+        time: newTime.format('h:mma')
+      })
+    }
+    else {
+      this.setState({
+        time: ''
+      })
+    }
   }
 
   render() {
@@ -40,12 +62,14 @@ class EventFormContainer extends Component {
         time={time}
         details={details}
         update={this.update}
+        updateDay={this.updateDay}
+        formatTime={this.formatTime}
       />
     )
   }
 }
 
-const EventForm = ({title, day, time, details, update, updateDay}) => (
+const EventForm = ({title, day, time, details, update, updateDay, formatTime}) => (
   <form className="event-form">
     <input 
       name="title"
@@ -66,16 +90,7 @@ const EventForm = ({title, day, time, details, update, updateDay}) => (
       value={time}
       onChange={update}
       placeholder="Time"
-      onBlur={(e) => {
-        const val = e.target.value
-        const m = moment(val, [
-          'h:mma',
-          'hmma',
-          'H:mm',
-          'Hmm'
-        ])
-        console.log(m.format('h:mma'))
-      }}
+      onBlur={formatTime}
     />
     <input 
       name="details"
