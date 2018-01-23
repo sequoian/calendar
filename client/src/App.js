@@ -1,20 +1,6 @@
 import React, { Component } from 'react'
 import EventForm from './components/EventForm'
-import moment from 'moment'
-import Modal from 'react-modal'
-
-const modalStyle = {
-  content: {
-    top: '50%', 
-    left: '50%', 
-    right: 'default', 
-    bottom: 'default', 
-    width: '300px',
-    height: '500px',
-    marginLeft: '-150px',
-    marginTop: '-250px'
-  }
-}
+import Modal from './components/FormModal'
 
 class App extends Component {
   constructor(props) {
@@ -38,8 +24,8 @@ class App extends Component {
           type="button"
           onClick={() => this.setState({open: true})}
         >New Event</button>
-        <Modal isOpen={this.state.open}
-          style={modalStyle}
+        <Modal 
+          isOpen={this.state.open}
           onRequestClose={this.closeModal}
         >
         <EventForm />
