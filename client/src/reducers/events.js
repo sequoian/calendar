@@ -11,7 +11,7 @@ const eventsByDate = (state = {}, action) => {
     case TOGGLE_EVENT:
     case EDIT_EVENT:
     case DELETE_EVENT:
-      const day = action.day
+      const day = action.event.day
       return Object.assign({}, state, {
         [day]: eventsBySchedule(state[day], action)
       })
@@ -26,32 +26,13 @@ const eventsBySchedule = (state = {}, action) => {
     case TOGGLE_EVENT:
     case EDIT_EVENT:
     case DELETE_EVENT:
-      const category = action.time ? 'scheduled' : 'unscheduled'
+      const category = action.event.time ? 'scheduled' : 'unscheduled'
       return Object.assign({}, state, {
         [category]: events(state[category], action)
       })
     default:
       return state
   }
-}
-
-const createEvent = action => {
-  return {
-    id: action.id,
-    title: action.title,
-    completed: action.completed,
-    day: action.day,
-    time: action.time,
-    details: action.details,
-    repeatOptions: {
-      repeats: action.repeats,
-      frequency: action.frequency,
-      daysOfWeek: action.daysOfWeek,
-      endOption: action.endOption,
-      endOn: action.endOn,
-      endAfter: action.endAfter
-    }
-  } 
 }
 
 const sortByTitle = (a, b) => {
@@ -63,8 +44,7 @@ const sortByTitle = (a, b) => {
 const events = (state = [], action) => {
   switch (action.type) {
     case ADD_EVENT: 
-      const newEvent = createEvent(action)
-      const events = [...state, newEvent]
+      const events = [...state, action.event]
       return events.sort(sortByTitle)
     case TOGGLE_EVENT:
       return state.map(event => {
@@ -77,8 +57,8 @@ const events = (state = [], action) => {
       })
     case EDIT_EVENT:
       const events = state.map(event => {
-        if (event.id === action.id) {
-          return createEvent(action)
+        if (event.id === action.event.id) {
+          return action.event
         }
         return event
       })
