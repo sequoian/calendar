@@ -1,34 +1,28 @@
-// uses closures to enforce DRY code
-const fullEventActionCreator = type => (
-  id, title, completed, day, time, details,
-  repeats, frequency, daysOfWeek, endOption, endOn, endAfter
-) => {
+export const ADD_EVENT = 'ADD_EVENT'
+export const addEvent = event => {
   return {
-    type,
+    type: ADD_EVENT,
     event: {
-      id,
-      title,
-      completed,
-      day,
-      time,
-      details,
-      repeatOptions: {
-        repeats,
-        frequency,
-        daysOfWeek,
-        endOption,
-        endOn,
-        endAfter
-      }
+      ...event,
+      id: Date.now(),
+      completed: false,
+      day: event.day.toString(),
+      endOn: event.endOn.toString()
     }
-  } 
+  }
 }
 
-export const ADD_EVENT = 'ADD_EVENT'
-export const addEvent = fullEventActionCreator(ADD_EVENT)
-
 export const EDIT_EVENT = 'EDIT_EVENT'
-export const editEvent = fullEventActionCreator(EDIT_EVENT)
+export const editEvent = event => {
+  return {
+    type: EDIT_EVENT,
+    event: {
+      ...event,
+      day: event.day.toString(),
+      endOn: event.endOn.toString()
+    }
+  }
+}
 
 export const TOGGLE_EVENT = 'TOGGLE_EVENT'
 export const toggleEvent = id => {

@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import moment from 'moment'
+import {addEvent, editEvent} from '../actions'
 import BasicOptions from './BasicOptions'
 import {
   Repeats,
@@ -34,6 +36,7 @@ class EventForm extends Component {
     this.setDaysOfWeek = this.setDaysOfWeek.bind(this)
     this.toggleShowMore = this.toggleShowMore.bind(this)
     this.formatTime = this.formatTime.bind(this)
+    this.submit = this.submit.bind(this)
   }
 
   handleChange(event) {
@@ -85,10 +88,22 @@ class EventForm extends Component {
     // placeholder
   }
 
+  submit(e) {
+    e.preventDefault()
+    const {dispatch} = this.props
+    const event = this.state
+    if (event.id) {
+      dispatch(editEvent(event))
+    }
+    else {
+      dispatch(addEvent(event))
+    }
+  }
+
   render() {
     const state = this.state
     return (
-      <form>
+      <form onSubmit={this.submit}>
         <BasicOptions
           title={state.title}
           day={state.day}
@@ -119,10 +134,13 @@ class EventForm extends Component {
             repeats={state.repeats}
             onChange={this.handleChange}
           />
+          {state.repeats === 'week' ?
+          // only show on weekly repeat
           <DaysOfWeek
             days={state.daysOfWeek}
             onChange={this.setDaysOfWeek}
           />
+          : null}
           <EndOptions>
             <EndNever
               checked={state.endOption === 'never'}
@@ -144,9 +162,12 @@ class EventForm extends Component {
           </EndOptions>
         </div>
         : null}
+        <button>Submit</button>
       </form>
     )
   }
 }
 
-export default EventForm
+const EventFormContainer = connect()(EventForm)
+
+export default EventFormContainer
