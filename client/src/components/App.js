@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import EventForm from './components/EventForm'
-import Modal from './components/FormModal'
+import React, {Component} from 'react'
+import EventForm from './EventForm'
+import Modal from './Modal'
 
 class App extends Component {
   constructor(props) {
@@ -8,13 +8,6 @@ class App extends Component {
     this.state = {
       open: false
     }
-    this.closeModal = this.closeModal.bind(this)
-  }
-
-  closeModal() {
-    this.setState({
-      open: false
-    })
   }
 
   render() {
@@ -23,12 +16,14 @@ class App extends Component {
         <button
           type="button"
           onClick={() => this.setState({open: true})}
-        >New Event</button>
+        >
+          New Event
+        </button>
         <Modal 
           isOpen={this.state.open}
-          onRequestClose={this.closeModal}
+          onClose={() => this.setState({open: false})}
         >
-        <EventForm />
+          <EventForm />
         </Modal>
         
       </div>

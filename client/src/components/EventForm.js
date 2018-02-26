@@ -1,112 +1,152 @@
-import React from 'react'
-import {Component} from 'react'
-import PropTypes from 'prop-types'
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
+import React, {Component} from 'react'
 import moment from 'moment'
-import RepeatOptions from './RepeatOptions'
+import BasicOptions from './BasicOptions'
+import {
+  Repeats,
+  ShowMore,
+  Frequency,
+  DaysOfWeek,
+  EndNever,
+  EndOn,
+  EndAfter,
+  EndOptions
+} from './RepeatOptions'
 
-class EventFormContainer extends Component {
+class EventForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      title: this.props.title || '',
-      day: moment(this.props.day) || moment(),
-      time: this.props.time || '',
-      details: this.props.description || ''
+      id: props.id || null,
+      title: props.title || '',
+      day: moment(props.day) || moment(),
+      time: props.time || '',
+      details: props.details || '',
+      repeats: props.repeats || 'no',
+      frequency: props.frequency || 1,
+      daysOfWeek: props.daysOfWeek || [0, 0, 0, 0, 0, 0, 0],
+      endOption: props.endOption || 'never',
+      endOn: props.endOn || moment(),
+      endAfter: props.endAfter || 10,
+      showMore: false
     }
-    this.update = this.update.bind(this)
-    this.updateDay = this.updateDay.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.setDatePicker = this.setDatePicker.bind(this)
+    this.setDaysOfWeek = this.setDaysOfWeek.bind(this)
+    this.toggleShowMore = this.toggleShowMore.bind(this)
     this.formatTime = this.formatTime.bind(this)
   }
 
-  update(event) {
+  handleChange(event) {
     const {name, value} = event.target
     this.setState({
       [name]: value
     })
   }
 
-  updateDay(value) {
+  setDatePicker(name, value) {
     this.setState({
-      day: value
+      [name]: value
+    })
+  }
+
+  setDaysOfWeek(event) {
+    const idx = event.target.value
+    this.setState((prevState) => {
+      const values = prevState.daysOfWeek.slice()
+      values[idx] = values[idx] ? 0 : 1  // 0 if 1, and 1 if 0
+      return {
+        daysOfWeek: values
+      }
+    })
+  }
+
+  toggleShowMore() {
+    this.setState(prevState => {
+      return {
+        showMore: !prevState.showMore
+      }
     })
   }
 
   formatTime(event) {
-    const {value} = event.target
-    const newTime = moment(value, [
+    const {name, value} = event.target
+    const time = moment(value, [
       'h:mma',
       'hmma',
       'H:mm',
       'Hmm'
     ])
-    if (newTime.isValid()) {
-      this.setState({
-        time: newTime.format('h:mma')
-      })
-    }
-    else {
-      this.setState({
-        time: ''
-      })
-    }
+    this.setState({
+      [name]: time.isValid() ? time.format('h:mma') : ''
+    })
+  }
+
+  formatInt() {
+    // placeholder
   }
 
   render() {
-    const {title, day, time, details} = this.state
+    const state = this.state
     return (
-      <EventForm
-        title={title}
-        day={day}
-        time={time}
-        details={details}
-        update={this.update}
-        updateDay={this.updateDay}
-        formatTime={this.formatTime}
-      />
+      <form>
+        <BasicOptions
+          title={state.title}
+          day={state.day}
+          time={state.time}
+          details={state.details}
+          onChange={this.handleChange}
+          onChangeDatePicker={value => {
+            this.setDatePicker('day', value)
+          }}
+          onBlurTime={this.formatTime}
+        />
+        <Repeats
+          repeats={state.repeats}
+          onChange={this.handleChange}
+        />
+        {state.repeats !== 'no' ?
+        // conditional show more button
+        <ShowMore
+          isShowing={state.showMore}
+          onClick={this.toggleShowMore}
+        /> 
+        : null}
+        {state.showMore && state.repeats !== 'no' ?
+        // conditional advanced options
+        <div>
+          <Frequency
+            frequency={state.frequency}
+            repeats={state.repeats}
+            onChange={this.handleChange}
+          />
+          <DaysOfWeek
+            days={state.daysOfWeek}
+            onChange={this.setDaysOfWeek}
+          />
+          <EndOptions>
+            <EndNever
+              checked={state.endOption === 'never'}
+              onChange={this.handleChange}
+            />
+            <EndOn
+              checked={state.endOption === 'on'}
+              onChange={this.handleChange}
+              date={state.endOn}
+              onDateChange={value => {
+                this.setDatePicker('endOn', value)
+              }}
+            />
+            <EndAfter
+              checked={state.endOption === 'after'}
+              number={state.endAfter}
+              onChange={this.handleChange}
+            />  
+          </EndOptions>
+        </div>
+        : null}
+      </form>
     )
   }
 }
 
-const EventForm = ({title, day, time, details, update, updateDay, formatTime}) => (
-  <form className="event-form">
-    <input 
-      name="title"
-      value={title}
-      onChange={update}
-      placeholder="Title"
-      autoFocus
-    />
-    <DatePicker
-      name="day"
-      selected={day}
-      dateFormat="MMM DD, YYYY"
-      onChange={updateDay}
-      placeholderText="Day"
-    />
-    <input
-      name="time" 
-      value={time}
-      onChange={update}
-      placeholder="Time"
-      onBlur={formatTime}
-    />
-    <input 
-      name="details"
-      value={details}
-      onChange={update}
-      placeholder="Details"
-    />
-    <RepeatOptions />
-  </form>
-)
-
-EventForm.propTypes = {
-  title: PropTypes.string,
-  day: PropTypes.object,
-  time: PropTypes.string,
-  description: PropTypes.string
-}
-
-export default EventFormContainer
+export default EventForm
