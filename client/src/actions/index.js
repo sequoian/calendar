@@ -1,3 +1,14 @@
+import moment from 'moment'
+
+const formatTime = time => {
+  return moment(time, [
+    'h:mma',
+    'hmma',
+    'H:mm',
+    'Hmm'
+  ]).valueOf()
+}
+
 export const ADD_EVENT = 'ADD_EVENT'
 export const addEvent = event => {
   return {
@@ -6,8 +17,9 @@ export const addEvent = event => {
       ...event,
       id: Date.now(),
       completed: false,
-      day: event.day.valueOf(),
-      endOn: event.endOn.valueOf()
+      day: event.day.startOf('day').valueOf(),
+      endOn: event.endOn.valueOf(),
+      time: formatTime(event.time) || ''
     }
   }
 }
@@ -18,8 +30,9 @@ export const editEvent = event => {
     type: EDIT_EVENT,
     event: {
       ...event,
-      day: event.day.valueOf(),
-      endOn: event.endOn.valueOf()
+      day: event.day.startOf('day').valueOf(),
+      endOn: event.endOn.valueOf(),
+      time: formatTime(event.time) || ''
     }
   }
 }

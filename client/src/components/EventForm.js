@@ -21,7 +21,7 @@ class EventForm extends Component {
       id: props.id || null,
       title: props.title || '',
       day: props.day ? moment(props.day) : moment(),
-      time: props.time || '',
+      time: props.time ? moment(props.time).format('h:mma') : '',
       details: props.details || '',
       repeats: props.repeats || 'no',
       frequency: props.frequency || 1,
