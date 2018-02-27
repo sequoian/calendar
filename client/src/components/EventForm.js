@@ -20,14 +20,14 @@ class EventForm extends Component {
     this.state = {
       id: props.id || null,
       title: props.title || '',
-      day: moment(props.day) || moment(),
+      day: props.day ? moment(props.day) : moment(),
       time: props.time || '',
       details: props.details || '',
       repeats: props.repeats || 'no',
       frequency: props.frequency || 1,
       daysOfWeek: props.daysOfWeek || [0, 0, 0, 0, 0, 0, 0],
       endOption: props.endOption || 'never',
-      endOn: props.endOn || moment(),
+      endOn: props.endOn ? moment(props.endOn) : moment().add(1, 'M'),
       endAfter: props.endAfter || 10,
       showMore: false
     }

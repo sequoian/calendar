@@ -1,15 +1,16 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {openEditor} from '../actions'
+import Event from './Event'
 
-const EventList = ({events, edit}) => (
+const EventList = ({events, onEventClick}) => (
   <ul>
     {events.map(event => (
       <li key={event.id}>
-        <div
-          onClick={e => edit(event)}
-        >
-          {event.title}
-        </div>
+        <Event
+          value={event}
+          onClick={e => onEventClick(event)}
+        />
       </li>
     ))}
   </ul>
@@ -21,8 +22,15 @@ const mapStateToProps = state => {
   }
 }
 
+const mapDispatchToProps = dispatch => {
+  return {
+    onEventClick: event => dispatch(openEditor(event))
+  }
+}
+
 const EventListContainer = connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(EventList)
 
 export default EventListContainer

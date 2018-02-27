@@ -6,8 +6,8 @@ export const addEvent = event => {
       ...event,
       id: Date.now(),
       completed: false,
-      day: event.day.toString(),
-      endOn: event.endOn.toString()
+      day: event.day.valueOf(),
+      endOn: event.endOn.valueOf()
     }
   }
 }
@@ -18,8 +18,8 @@ export const editEvent = event => {
     type: EDIT_EVENT,
     event: {
       ...event,
-      day: event.day.toString(),
-      endOn: event.endOn.toString()
+      day: event.day.valueOf(),
+      endOn: event.endOn.valueOf()
     }
   }
 }
