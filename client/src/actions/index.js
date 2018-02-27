@@ -39,3 +39,18 @@ export const deleteEvent = id => {
     id
   }
 }
+
+export const OPEN_EDITOR = 'OPEN_EDITOR'
+export const openEditor = (event = null) => {
+  return {
+    type: OPEN_EDITOR,
+    event
+  }
+}
+
+export const CLOSE_EDITOR = 'CLOSE_EDITOR'
+export const closeEditor = () => {
+  return {
+    type: CLOSE_EDITOR
+  }
+}

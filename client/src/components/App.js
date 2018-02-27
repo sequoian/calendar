@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import EventForm from './EventForm'
 import Modal from './Modal'
 import EventList from './EventList'
+import NewEventBtn from './NewEventBtn'
 
 class App extends Component {
   constructor(props) {
@@ -14,17 +15,9 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <button
-          type="button"
-          onClick={() => this.setState({open: true})}
-        >
-          New Event
-        </button>
+        <NewEventBtn />
         <EventList />
-        <Modal 
-          isOpen={this.state.open}
-          onClose={() => this.setState({open: false})}
-        >
+        <Modal>
           <EventForm />
         </Modal>
         

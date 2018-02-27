@@ -168,6 +168,14 @@ class EventForm extends Component {
   }
 }
 
-const EventFormContainer = connect()(EventForm)
+const mapStateToProps = state => {
+  return {
+    ...state.editor.event
+  }
+}
+
+const EventFormContainer = connect(
+  mapStateToProps
+)(EventForm)
 
 export default EventFormContainer
