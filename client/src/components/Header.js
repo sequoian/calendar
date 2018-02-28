@@ -3,6 +3,8 @@ import {connect} from 'react-redux'
 import {changeDay} from '../actions'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import moment from 'moment'
+import NewEventBtn from './NewEventBtn'
 
 const Header = ({selectedDay, onDayChange}) => (
   <div>
@@ -12,7 +14,9 @@ const Header = ({selectedDay, onDayChange}) => (
       selected={selectedDay}
       onChange={onDayChange}
       todayButton={"Today"}
+      highlightDates={[moment()]}
     />
+    <NewEventBtn />
   </div>
 )
 

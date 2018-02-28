@@ -6,7 +6,7 @@ import moment from 'moment'
 
 const EventList = ({events, onEventClick}) => {
   if (events.length < 1) return (
-    <div>Nothing Scheduled</div>
+    <div>Nothing scheduled</div>
   )
   return (
     <div>
@@ -79,7 +79,7 @@ const mapStateToProps = state => {
   const filtered = sorted.filter(thisDayAndLater(state.calendar.selectedDay.valueOf()))
   const divided = divideByDay(filtered)
   return {
-    events: filtered.length > 1 ? divided : filtered
+    events: filtered.length > 0 ? divided : filtered
   }
 }
 

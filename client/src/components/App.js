@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import EventForm from './EventForm'
 import Modal from './Modal'
 import EventList from './EventList'
-import NewEventBtn from './NewEventBtn'
 import Header from './Header'
 
 class App extends Component {
@@ -17,12 +16,10 @@ class App extends Component {
     return (
       <div className="App">
         <Header />
-        <NewEventBtn />
         <EventList />
         <Modal>
           <EventForm />
         </Modal>
-        
       </div>
     )
   }
