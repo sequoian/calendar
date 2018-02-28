@@ -67,3 +67,11 @@ export const closeEditor = () => {
     type: CLOSE_EDITOR
   }
 }
+
+export const CHANGE_DAY = 'CHANGE_DAY'
+export const changeDay = day => {
+  return {
+    type: CHANGE_DAY,
+    day
+  }
+}

@@ -3,6 +3,7 @@ import EventForm from './EventForm'
 import Modal from './Modal'
 import EventList from './EventList'
 import NewEventBtn from './NewEventBtn'
+import Header from './Header'
 
 class App extends Component {
   constructor(props) {
@@ -15,6 +16,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <Header />
         <NewEventBtn />
         <EventList />
         <Modal>
