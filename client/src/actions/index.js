@@ -54,10 +54,11 @@ export const deleteEvent = id => {
 }
 
 export const OPEN_EDITOR = 'OPEN_EDITOR'
-export const openEditor = (event = null) => {
+export const openEditor = (event = null, day = null) => {
   return {
     type: OPEN_EDITOR,
-    event
+    event,
+    day
   }
 }
 

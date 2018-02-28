@@ -4,7 +4,7 @@ import {openEditor, toggleEvent} from '../actions'
 import Event from './Event'
 import moment from 'moment'
 
-const EventList = ({events, onEventClick, onEventToggle}) => {
+const EventList = ({events, onEventClick, onEventToggle, onDayClick}) => {
   if (events.length < 1) return (
     <div>Nothing scheduled</div>
   )
@@ -12,7 +12,9 @@ const EventList = ({events, onEventClick, onEventToggle}) => {
     <div>
       {events.map(byDay => (
         <div key={byDay[0].day}>
-          <h2>{moment(byDay[0].day).format('dddd, MMMM DD, YYYY')}</h2>
+          <h2 onClick={e => onDayClick(byDay[0].day)}>
+            {moment(byDay[0].day).format('dddd, MMMM DD, YYYY')}
+          </h2>
           <ul>
           {byDay.map(event => (
             <li key={event.id}>
@@ -87,7 +89,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onEventClick: event => dispatch(openEditor(event)),
-    onEventToggle: id => dispatch(toggleEvent(id))
+    onEventToggle: id => dispatch(toggleEvent(id)),
+    onDayClick: day => dispatch(openEditor(null, day))
   }
 }
 

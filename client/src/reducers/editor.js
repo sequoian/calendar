@@ -2,7 +2,8 @@ import {OPEN_EDITOR, CLOSE_EDITOR} from '../actions'
 
 const defaultState = {
   isOpen: false,
-  event: null
+  event: null,
+  day: null
 }
 
 const editor = (state = defaultState, action) => {
@@ -10,12 +11,14 @@ const editor = (state = defaultState, action) => {
     case OPEN_EDITOR:
       return {
         isOpen: true,
-        event: action.event
+        event: action.event,
+        day: action.day
       }
     case CLOSE_EDITOR:
       return {
         isOpen: false,
-        event: null
+        event: null,
+        day: null
       }
     default:
       return state

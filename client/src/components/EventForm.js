@@ -126,7 +126,8 @@ class EventForm extends Component {
           onBlurTime={this.formatTime}
         />
         
-        {/* <Repeats
+        {/* 
+        <Repeats
           repeats={state.repeats}
           onChange={this.handleChange}
         />
@@ -172,7 +173,8 @@ class EventForm extends Component {
             />  
           </EndOptions>
         </div>
-        : null} */}
+        : null} 
+        */}
 
         <button>Save</button>
       </form>
@@ -183,7 +185,7 @@ class EventForm extends Component {
 const mapStateToProps = state => {
   return {
     ...state.editor.event,
-    selectedDay: state.calendar.selectedDay
+    selectedDay: state.editor.day || state.calendar.selectedDay
   }
 }
 
