@@ -1,10 +1,10 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {openEditor} from '../actions'
+import {openEditor, toggleEvent} from '../actions'
 import Event from './Event'
 import moment from 'moment'
 
-const EventList = ({events, onEventClick}) => {
+const EventList = ({events, onEventClick, onEventToggle}) => {
   if (events.length < 1) return (
     <div>Nothing scheduled</div>
   )
@@ -19,6 +19,7 @@ const EventList = ({events, onEventClick}) => {
               <Event
                 value={event}
                 onClick={e => onEventClick(event)}
+                onToggle={e => onEventToggle(event.id)}
               />
             </li>
           ))}
@@ -85,7 +86,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onEventClick: event => dispatch(openEditor(event))
+    onEventClick: event => dispatch(openEditor(event)),
+    onEventToggle: id => dispatch(toggleEvent(id))
   }
 }
 
