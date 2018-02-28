@@ -1,18 +1,18 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import moment from 'moment'
-import {addEvent, editEvent} from '../actions'
+import {addEvent, editEvent, closeEditor} from '../actions'
 import BasicOptions from './BasicOptions'
-import {
-  Repeats,
-  ShowMore,
-  Frequency,
-  DaysOfWeek,
-  EndNever,
-  EndOn,
-  EndAfter,
-  EndOptions
-} from './RepeatOptions'
+// import {
+//   Repeats,
+//   ShowMore,
+//   Frequency,
+//   DaysOfWeek,
+//   EndNever,
+//   EndOn,
+//   EndAfter,
+//   EndOptions
+// } from './RepeatOptions'
 
 class EventForm extends Component {
   constructor(props) {
@@ -84,10 +84,6 @@ class EventForm extends Component {
     })
   }
 
-  formatInt() {
-    // placeholder
-  }
-
   submit(e) {
     e.preventDefault()
     const {dispatch} = this.props
@@ -98,6 +94,7 @@ class EventForm extends Component {
     else {
       dispatch(addEvent(event))
     }
+    dispatch(closeEditor())
   }
 
   render() {
@@ -115,7 +112,8 @@ class EventForm extends Component {
           }}
           onBlurTime={this.formatTime}
         />
-        <Repeats
+        
+        {/* <Repeats
           repeats={state.repeats}
           onChange={this.handleChange}
         />
@@ -161,8 +159,9 @@ class EventForm extends Component {
             />  
           </EndOptions>
         </div>
-        : null}
-        <button>Submit</button>
+        : null} */}
+
+        <button>Save</button>
       </form>
     )
   }
