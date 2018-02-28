@@ -20,7 +20,7 @@ class EventForm extends Component {
     this.state = {
       id: props.id || null,
       title: props.title || '',
-      day: props.day ? moment(props.day) : moment(),
+      day: props.day ? moment(props.day) : moment(props.selectedDay),
       time: props.time ? moment(props.time).format('h:mma') : '',
       details: props.details || '',
       repeats: props.repeats || 'no',
@@ -170,7 +170,8 @@ class EventForm extends Component {
 
 const mapStateToProps = state => {
   return {
-    ...state.editor.event
+    ...state.editor.event,
+    selectedDay: state.calendar.selectedDay
   }
 }
 

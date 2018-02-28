@@ -4,25 +4,30 @@ import {openEditor} from '../actions'
 import Event from './Event'
 import moment from 'moment'
 
-const EventList = ({events, onEventClick}) => (
-  <div>
-    {events.map(byDay => (
-      <div key={byDay[0].day}>
-        <h2>{moment(byDay[0].day).format('dddd, MMMM DD, YYYY')}</h2>
-        <ul>
-        {byDay.map(event => (
-          <li key={event.id}>
-            <Event
-              value={event}
-              onClick={e => onEventClick(event)}
-            />
-          </li>
-        ))}
-        </ul>
-      </div>
-    ))}
-  </div>
-)
+const EventList = ({events, onEventClick}) => {
+  if (events.length < 1) return (
+    <div>No Events Scheduled</div>
+  )
+  return (
+    <div>
+      {events.map(byDay => (
+        <div key={byDay[0].day}>
+          <h2>{moment(byDay[0].day).format('dddd, MMMM DD, YYYY')}</h2>
+          <ul>
+          {byDay.map(event => (
+            <li key={event.id}>
+              <Event
+                value={event}
+                onClick={e => onEventClick(event)}
+              />
+            </li>
+          ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  )
+}
 
 const sortByDay = (a, b) => {
   if (a.day > b.day) return 1
