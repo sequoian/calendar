@@ -2,18 +2,26 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {openEditor} from '../actions'
 import Event from './Event'
+import moment from 'moment'
 
 const EventList = ({events, onEventClick}) => (
-  <ul>
-    {events.map(event => (
-      <li key={event.id}>
-        <Event
-          value={event}
-          onClick={e => onEventClick(event)}
-        />
-      </li>
+  <div>
+    {events.map(byDay => (
+      <div key={byDay[0].day}>
+        <h2>{moment(byDay[0].day).format('MMMM DD, YYYY')}</h2>
+        <ul>
+        {byDay.map(event => (
+          <li key={event.id}>
+            <Event
+              value={event}
+              onClick={e => onEventClick(event)}
+            />
+          </li>
+        ))}
+        </ul>
+      </div>
     ))}
-  </ul>
+  </div>
 )
 
 const sortByDay = (a, b) => {
@@ -25,6 +33,7 @@ const sortByDay = (a, b) => {
 const sortByTime = (a, b) => {
   const timeA = parseInt(a.time, 10)
   const timeB = parseInt(b.time, 10)
+  // no times go to front of list
   if (isNaN(timeA) && !isNaN(timeB)) return -1
   if (!isNaN(timeA) && isNaN(timeB)) return 1
   // then sort if both events have time prop
@@ -33,9 +42,32 @@ const sortByTime = (a, b) => {
   return 0
 }
 
+const divideByDay = events => {
+  let currentDay = null
+  let daysEvents = []
+  const days = []
+  events.forEach(event => {
+    if (currentDay === null) {
+      currentDay = event.day
+      daysEvents = [event]
+    }
+    else if (event.day !== currentDay) {
+      days.push(daysEvents)
+      currentDay = event.day
+      daysEvents = [event]
+    }
+    else {
+      daysEvents.push(event)
+    }
+  })
+  days.push(daysEvents)
+  return days
+}
+
 const mapStateToProps = state => {
+  const sorted = state.events.slice().sort(sortByDay)
   return {
-    events: state.events.sort(sortByDay)
+    events: sorted.length > 0 ? divideByDay(sorted) : sorted
   }
 }
 
