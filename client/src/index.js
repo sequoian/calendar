@@ -15,6 +15,7 @@ store.subscribe(() => {
   storage.saveState({
     events: store.getState().events
   })
+  console.log(store.getState())
 }) 
 
 ReactDOM.render(

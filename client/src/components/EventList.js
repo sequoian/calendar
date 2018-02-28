@@ -8,7 +8,7 @@ const EventList = ({events, onEventClick}) => (
   <div>
     {events.map(byDay => (
       <div key={byDay[0].day}>
-        <h2>{moment(byDay[0].day).format('MMMM DD, YYYY')}</h2>
+        <h2>{moment(byDay[0].day).format('dddd, MMMM DD, YYYY')}</h2>
         <ul>
         {byDay.map(event => (
           <li key={event.id}>
@@ -42,6 +42,10 @@ const sortByTime = (a, b) => {
   return 0
 }
 
+const thisDayAndLater = day => event => {
+  if (event.day >= day) return event
+}
+
 const divideByDay = events => {
   let currentDay = null
   let daysEvents = []
@@ -65,9 +69,12 @@ const divideByDay = events => {
 }
 
 const mapStateToProps = state => {
-  const sorted = state.events.slice().sort(sortByDay)
+  const events = state.events.slice()
+  const sorted = events.sort(sortByDay)
+  const filtered = sorted.filter(thisDayAndLater(state.calendar.selectedDay.valueOf()))
+  const divided = divideByDay(filtered)
   return {
-    events: sorted.length > 0 ? divideByDay(sorted) : sorted
+    events: filtered.length > 1 ? divided : filtered
   }
 }
 
