@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import moment from 'moment'
 import {addEvent, editEvent, closeEditor} from '../actions'
+import validate from '../validate'
 import BasicOptions from './BasicOptions'
 // import {
 //   Repeats,
@@ -29,7 +30,8 @@ class EventForm extends Component {
       endOption: props.endOption || 'never',
       endOn: props.endOn ? moment(props.endOn) : moment().add(1, 'M'),
       endAfter: props.endAfter || 10,
-      showMore: false
+      showMore: false,
+      errors: {}
     }
     this.handleChange = this.handleChange.bind(this)
     this.setDatePicker = this.setDatePicker.bind(this)
@@ -86,8 +88,18 @@ class EventForm extends Component {
 
   submit(e) {
     e.preventDefault()
-    const {dispatch} = this.props
     const event = this.state
+
+    // validate
+    const errors = validate(event)
+    if (Object.keys(errors).length > 0) {
+      return this.setState({
+        errors
+      })
+    }
+
+    // update store
+    const {dispatch} = this.props
     if (event.id) {
       dispatch(editEvent(event))
     }
@@ -106,6 +118,7 @@ class EventForm extends Component {
           day={state.day}
           time={state.time}
           details={state.details}
+          errors={state.errors}
           onChange={this.handleChange}
           onChangeDatePicker={value => {
             this.setDatePicker('day', value)

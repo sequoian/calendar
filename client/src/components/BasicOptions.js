@@ -3,15 +3,18 @@ import PropTypes from 'prop-types'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
-const BasicOptions = ({title, day, time, details, onChange, onChangeDatePicker, onBlurTime}) => (
+const BasicOptions = ({title, day, time, details, errors, onChange, onChangeDatePicker, onBlurTime}) => (
   <div>
-    <input
-      name="title"
-      value={title}
-      onChange={onChange}
-      placeholder="Title"
-      autoFocus
-    />
+    <div className={errors.title ? 'error' : null}>
+      <span>{errors.title}</span>
+      <input
+        name="title"
+        value={title}
+        onChange={onChange}
+        placeholder="Title"
+        autoFocus
+      />
+    </div>
     <DatePicker
       name="day"
       selected={day}
