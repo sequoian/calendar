@@ -9,6 +9,7 @@ import NewEventBtn from './NewEventBtn'
 
 const Header = ({selectedDay, onDayChange}) => (
   <div className="header">
+    <h1>Calendar</h1>
     <DatePicker
       dateFormat="MMM DD, YYYY"
       customInput={<DatePickerInput />}

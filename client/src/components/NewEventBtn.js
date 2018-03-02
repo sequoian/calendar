@@ -4,6 +4,7 @@ import {openEditor} from '../actions'
 
 const NewEventBtn = ({onClick}) => (
   <button
+    className="new-event"
     onClick={onClick}
   >
     New Event
