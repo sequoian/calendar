@@ -4,10 +4,11 @@ import {changeDay} from '../actions'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import moment from 'moment'
+import '../css/Header.css'
 import NewEventBtn from './NewEventBtn'
 
 const Header = ({selectedDay, onDayChange}) => (
-  <div>
+  <div className="header">
     <DatePicker
       dateFormat="MMM DD, YYYY"
       customInput={<DatePickerInput />}
@@ -23,8 +24,11 @@ const Header = ({selectedDay, onDayChange}) => (
 class DatePickerInput extends Component {
   render() {
     return (
-      <button onClick={this.props.onClick}>
-        {this.props.value}
+      <button 
+        id="calendar"
+        onClick={this.props.onClick}
+      >
+        {this.props.value}<span className="select" />
       </button>
     )
   }

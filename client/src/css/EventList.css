@@ -1,14 +1,21 @@
+.event-list {
+  padding-top: 60px;
+}
+
 .day {
   border-bottom: 1px solid gray;
   padding: 20px 15px;
 }
 
-.day:first-child {
-  border-top: 1px solid gray;
-}
-
 .day h2 {
+  display: inline-block;
   font-size: 1.3em;
   padding-bottom: 10px;
   cursor: pointer;
+}
+
+.event-list.empty span {
+  display: block;
+  padding: 15px;
+  font-size: 1.3em;
 }

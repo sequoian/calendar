@@ -4,6 +4,6 @@
   box-sizing: border-box;
 }
 
-body {
+body, button {
   font-family: 'Open Sans', sans-serif;
 }

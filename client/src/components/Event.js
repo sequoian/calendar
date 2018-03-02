@@ -17,7 +17,6 @@ const Event = ({value, onClick, onToggle}) => (
         {value.time ? moment(value.time).format('h:mma') : ''}
       </div>
       <div className="details">{value.details}</div>
-
     </div>
   </div>
 )

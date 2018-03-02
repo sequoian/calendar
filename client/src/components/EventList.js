@@ -7,7 +7,9 @@ import moment from 'moment'
 
 const EventList = ({events, onEventClick, onEventToggle, onDayClick}) => {
   if (events.length < 1) return (
-    <div>Nothing scheduled</div>
+    <div className="event-list empty">
+      <span>Nothing scheduled</span>
+    </div>
   )
   return (
     <div className="event-list">
