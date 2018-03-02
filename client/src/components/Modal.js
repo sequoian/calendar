@@ -2,10 +2,12 @@ import React from 'react'
 import {connect} from 'react-redux'
 import ReactModal from 'react-modal'
 import {closeEditor, deleteEvent} from '../actions'
+import '../css/Modal.css'
 import ModalHeader from './ModalHeader'
 
 const Modal = ({isOpen, eventId, onClose, onDelete, children}) => (
   <ReactModal
+    className="modal"
     isOpen={isOpen}
     onRequestClose={onClose}
     appElement={document.getElementById('root')}

@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import moment from 'moment'
 import {addEvent, editEvent, closeEditor} from '../actions'
 import validate from '../validate'
+import '../css/EventForm.css'
 import BasicOptions from './BasicOptions'
 // import {
 //   Repeats,
@@ -112,7 +113,10 @@ class EventForm extends Component {
   render() {
     const state = this.state
     return (
-      <form onSubmit={this.submit}>
+      <form 
+        className="event-form"
+        onSubmit={this.submit}
+      >
         <BasicOptions
           title={state.title}
           day={state.day}
