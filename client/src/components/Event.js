@@ -11,13 +11,13 @@ const Event = ({value, onClick, onToggle}) => (
       className="event-info"
       onClick={onClick}
     >
+      
+      <div className="title">{value.title}</div>
       <div className="time">
         {value.time ? moment(value.time).format('h:mma') : ''}
       </div>
-      <div>
-        <div className="title">{value.title}</div>
-        <div className="details">{value.details}</div>
-      </div>
+      <div className="details">{value.details}</div>
+
     </div>
   </div>
 )
