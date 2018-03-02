@@ -46,6 +46,7 @@ h1 {
   background-color: lightgray;
   cursor: pointer;
   border-radius: 7px;
+  font-weight: 300;
 }
 
 .header button {
