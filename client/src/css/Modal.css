@@ -9,3 +9,29 @@
   flex-direction: column;
   font-size: 20px;
 }
+
+@media (min-height: 601px) {
+  .modal {
+    height: 600px;
+    top: 50%;
+    margin-top: -300px;
+    border-bottom: 1px solid gray;
+    border-top: 1px solid gray;
+  }
+}
+
+@media (min-width: 575px) {
+  .modal {
+    width: 574px;
+    left: 50%;
+    margin-left: -287px;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+  }
+}
+
+@media (min-height: 601px) and (min-width: 575px) {
+  .modal {
+    border-radius: 7px;
+  }
+}
