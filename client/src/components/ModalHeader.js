@@ -1,16 +1,23 @@
 import React from 'react'
+import '../css/ModalHeader.css'
 
 const ModalHeader = ({eventId, onClose, onDelete}) => (
-  <div>
+  <div className="modal-header">
     {eventId ? 
-      <button onClick={onDelete}>
+      <button 
+        className="delete-btn"
+        onClick={onDelete}
+      >
         Delete
       </button>
-      : null
+      : <span />
     }
     <span>{eventId ? 'Edit' : 'New'}</span>
-    <button onClick={onClose}>
-      Close
+    <button 
+      className="close-btn"
+      onClick={onClose}
+    >
+      ×
     </button>
   </div>
 )

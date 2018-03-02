@@ -30,8 +30,6 @@ h1 {
   }
 }
 
-
-
 /* header button */
 
 .header button {
@@ -40,7 +38,7 @@ h1 {
   background-color: inherit;
   border: none;
   cursor: default;
-  font-size: 1em;
+  font-size: .95em;
   padding: 5px 10px;
   color: black;
   background-color: lightgray;

@@ -1,0 +1,33 @@
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  border-bottom: 1px solid gray;
+}
+
+.modal-header button {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  cursor: pointer;
+  background-color: inherit;
+}
+
+.modal-header .close-btn {
+  font-size: 30px;
+}
+
+.modal-header .delete-btn {
+  padding: 5px 10px;
+  background-color: lightgray;
+  border-radius: 7px;
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+.modal-header .delete-btn:hover,
+.modal-header .delete-btn:focus {
+  background-color: red;
+  color: white;
+}
