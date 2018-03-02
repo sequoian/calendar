@@ -1,0 +1,51 @@
+.event {
+  display: flex;
+}
+
+.event-info {
+  display: flex;
+  flex: 1;
+  cursor: pointer;
+}
+
+.complete .event-info {
+  color: gray;
+}
+
+.event-info:hover {
+  background-color: lightgray;
+}
+
+.event .title {
+  font-weight: 600;
+}
+
+.time, .details {
+  font-size: .9em;
+}
+
+
+/* Toggle */
+
+.event-toggle {
+  padding: 0 10px;
+}
+
+.event-toggle button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: inherit;
+  border: 3px solid green;
+  border-radius: 5px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.complete button {
+  background-color: greenyellow;
+}
+
+.event-toggle button:focus {
+  outline: none
+}

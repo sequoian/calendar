@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {openEditor, toggleEvent} from '../actions'
+import '../css/EventList.css'
 import Event from './Event'
 import moment from 'moment'
 
@@ -9,9 +10,12 @@ const EventList = ({events, onEventClick, onEventToggle, onDayClick}) => {
     <div>Nothing scheduled</div>
   )
   return (
-    <div>
+    <div className="event-list">
       {events.map(byDay => (
-        <div key={byDay[0].day}>
+        <div 
+          className="day"
+          key={byDay[0].day}
+        >
           <h2 onClick={e => onDayClick(byDay[0].day)}>
             {moment(byDay[0].day).format('dddd, MMMM DD, YYYY')}
           </h2>

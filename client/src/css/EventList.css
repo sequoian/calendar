@@ -1,0 +1,14 @@
+.day {
+  border-bottom: 1px solid gray;
+  padding: 10px;
+}
+
+.day:first-child {
+  border-top: 1px solid gray;
+}
+
+.day h2 {
+  font-size: 1.3em;
+  padding: 10px 0;
+  cursor: pointer;
+}

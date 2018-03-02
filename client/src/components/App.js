@@ -3,6 +3,7 @@ import EventForm from './EventForm'
 import Modal from './Modal'
 import EventList from './EventList'
 import Header from './Header'
+import '../css/App.css'
 
 class App extends Component {
   constructor(props) {
