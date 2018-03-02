@@ -1,0 +1,52 @@
+input {
+  display: block;
+  font-size: 16px;
+  font-family: 'Open Sans', sans-serif;
+  margin-bottom: 15px;
+  padding: 5px 10px;
+}
+
+/* Title and details */
+
+input[name="title"] {
+  font-size: 20px;
+  width: 100%;
+}
+
+input[name="details"] {
+  width: 100%;
+}
+
+/* Day and time inputs */
+
+.react-datepicker-wrapper,
+.react-datepicker__input-container {
+  display: block;
+}
+
+input[name="day"] {
+  display: block;
+  width: 100%;
+}
+
+input[name="time"],
+.datetime > div:first-child {
+  display: block;
+  width: 100%;
+}
+
+@media (min-width: 575px) {
+  input[name="time"],
+  .datetime > div:first-child {
+    display: inline-block;
+    width: 200px;
+  }
+
+  input[name="time"] {
+    margin-left: 20px;
+  }
+
+  input[name="title"] {
+    margin-bottom: 30px;
+  }
+}

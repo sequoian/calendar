@@ -2,9 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import '../css/BasicOptions.css'
 
 const BasicOptions = ({title, day, time, details, errors, onChange, onChangeDatePicker, onBlurTime}) => (
-  <div>
+  <div className="basic-options">
     <div className={errors.title ? 'error' : null}>
       <span>{errors.title}</span>
       <input
@@ -15,20 +16,22 @@ const BasicOptions = ({title, day, time, details, errors, onChange, onChangeDate
         autoFocus
       />
     </div>
-    <DatePicker
-      name="day"
-      selected={day}
-      dateFormat="MMM DD, YYYY"
-      onChange={onChangeDatePicker}
-      placeholderText="Day"
-    />
-    <input
-      name="time" 
-      value={time}
-      onChange={onChange}
-      placeholder="Time"
-      onBlur={onBlurTime}
-    />
+    <div className="datetime">
+      <DatePicker
+        name="day"
+        selected={day}
+        dateFormat="MMM DD, YYYY"
+        onChange={onChangeDatePicker}
+        placeholderText="Day"
+      />
+      <input
+        name="time" 
+        value={time}
+        onChange={onChange}
+        placeholder="Time"
+        onBlur={onBlurTime}
+      />
+    </div>
     <input 
       name="details"
       value={details}
