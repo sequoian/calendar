@@ -7,7 +7,10 @@
   flex: 1;
   cursor: pointer;
   flex-wrap: wrap;
-  padding: 5px 0;
+  padding: 7px 0;
+  padding-left: 5px;
+  margin-left: 20px;
+  line-height: 1.25em;
 }
 
 .complete .event-info {
@@ -28,22 +31,37 @@
   padding-right: 30px;
 }
 
+.time:empty {
+  display: none;
+}
+
 .time, .details {
   font-size: .9em;
 }
 
-@media (min-width: 800px) {
+@media (min-width: 860px) {
+  .event-info {
+    margin: 0;
+  }
+
   .time {
     order: -1;
     padding: 0 10px;
-    width: 10%;
+    width: 12%;
   }
+
+  .time:empty {
+    display: block;
+  }
+
   .title {
-    width: 90%;
+    width: 88%;
+    padding: 0 10px;
   }
 
   .details {
-    padding-left: 10%;
+    margin-left: 12%;
+    padding: 0 10px;
   }
 }
 
@@ -51,7 +69,8 @@
 /* Toggle */
 
 .event-toggle {
-  padding: 0 10px;
+  padding: 7px 10px;
+  padding-left: 0;
 }
 
 .event-toggle button {
@@ -60,8 +79,8 @@
   background-color: inherit;
   border: 3px solid green;
   border-radius: 5px;
-  width: 18px;
-  height: 18px;
+  width: 21px;
+  height: 21px;
   cursor: pointer;
 }
 
