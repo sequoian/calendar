@@ -14,6 +14,11 @@ const BasicOptions = ({title, day, time, details, errors, onChange, onChangeDate
         onChange={onChange}
         placeholder="Title"
         autoFocus
+        onFocus={e => {
+          const tmp = e.target.value
+          e.target.value = ''
+          e.target.value = tmp
+        }}
       />
     </div>
     <div className="datetime">

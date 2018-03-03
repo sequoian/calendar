@@ -1,8 +1,8 @@
 class Storage {
 
-  static loadState() {
+  static loadState(key) {
     try {
-      const serializedState = localStorage.getItem('state')
+      const serializedState = localStorage.getItem(key)
       if (serializedState === null) throw new Error()
       return JSON.parse(serializedState)
     } catch (e) {
@@ -10,10 +10,10 @@ class Storage {
     }
   }
 
-  static saveState(state) {
+  static saveState(key, state) {
     try {
       const serializedState = JSON.stringify(state)
-      localStorage.setItem('state', serializedState)
+      localStorage.setItem(key, serializedState)
     } catch (e) {
       return
     }

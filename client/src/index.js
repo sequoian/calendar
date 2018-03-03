@@ -9,11 +9,11 @@ import './css/reset.css'
 import './css/index.css'
 import App from './components/App'
 
-const persistedState = storage.loadState()
+const persistedState = storage.loadState('calendarState')
 const store = createStore(reducers, persistedState)
 
 store.subscribe(() => {
-  storage.saveState({
+  storage.saveState('calendarState', {
     events: store.getState().events
   })
 }) 
