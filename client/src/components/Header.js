@@ -16,7 +16,6 @@ const Header = ({selectedDay, onDayChange}) => (
       selected={selectedDay}
       onChange={onDayChange}
       todayButton={"Today"}
-      highlightDates={[moment()]}
     />
     <NewEventBtn />
   </div>

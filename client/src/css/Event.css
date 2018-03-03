@@ -77,7 +77,7 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   background-color: inherit;
-  border: 3px solid var(--font-color);
+  border: 2px solid var(--font-color);
   border-radius: 5px;
   width: 21px;
   height: 21px;
