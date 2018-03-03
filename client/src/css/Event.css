@@ -71,21 +71,28 @@
 .event-toggle {
   padding: 7px 10px;
   padding-left: 0;
+  /* vars */
+  --outer: #FCCF31;
+  --inner: #FCCF31;
 }
 
 .event-toggle button {
   -webkit-appearance: none;
   -moz-appearance: none;
   background-color: inherit;
-  border: 3px solid green;
+  border: 3px solid var(--outer);
   border-radius: 5px;
   width: 21px;
   height: 21px;
   cursor: pointer;
 }
 
+.event-toggle button:hover {
+  opacity: 0.5;
+}
+
 .complete button {
-  background-color: greenyellow;
+  background-color: var(--inner);
 }
 
 .event-toggle button:focus {
