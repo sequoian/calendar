@@ -1,6 +1,7 @@
 .event-form {
   padding: 15px;
   padding-top: 30px;
+  overflow-y: auto;
 }
 
 .event-form button {

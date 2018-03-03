@@ -18,6 +18,11 @@
   font-size: 30px;
 }
 
+.modal-header .close-btn:focus {
+  outline: none;
+  font-weight: bold;
+}
+
 .modal-header .delete-btn {
   padding: 5px 10px;
   background-color: lightgray;
