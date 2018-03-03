@@ -2,8 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {openEditor, toggleEvent} from '../actions'
 import '../css/EventList.css'
-import Event from './Event'
-import moment from 'moment'
+import Day from './Day'
 
 const EventList = ({events, onEventClick, onEventToggle, onDayClick}) => {
   if (events.length < 1) return (
@@ -13,26 +12,14 @@ const EventList = ({events, onEventClick, onEventToggle, onDayClick}) => {
   )
   return (
     <div className="event-list">
-      {events.map(byDay => (
-        <div 
-          className="day"
-          key={byDay[0].day}
-        >
-          <h2 onClick={e => onDayClick(byDay[0].day)}>
-            {moment(byDay[0].day).format('dddd, MMMM DD, YYYY')}
-          </h2>
-          <ul>
-          {byDay.map(event => (
-            <li key={event.id}>
-              <Event
-                value={event}
-                onClick={e => onEventClick(event)}
-                onToggle={e => onEventToggle(event.id)}
-              />
-            </li>
-          ))}
-          </ul>
-        </div>
+      {events.map(eventsByDay => (
+        <Day
+          key={eventsByDay[0].day}
+          events={eventsByDay}
+          onEventClick={onEventClick}
+          onEventToggle={onEventToggle}
+          onHeaderClick={onDayClick}
+        />
       ))}
     </div>
   )

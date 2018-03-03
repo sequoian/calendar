@@ -1,0 +1,15 @@
+.day {
+  border-bottom: 1px solid gray;
+  padding: 20px 15px;
+}
+
+.day h2 {
+  display: inline-block;
+  font-size: 1.3em;
+  padding-bottom: 10px;
+  cursor: pointer;
+}
+
+.day.past h2 {
+  color: gray;
+}

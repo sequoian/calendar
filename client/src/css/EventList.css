@@ -2,18 +2,6 @@
   padding-top: 70px;
 }
 
-.day {
-  border-bottom: 1px solid gray;
-  padding: 20px 15px;
-}
-
-.day h2 {
-  display: inline-block;
-  font-size: 1.3em;
-  padding-bottom: 10px;
-  cursor: pointer;
-}
-
 .event-list.empty span {
   display: block;
   padding: 15px;
