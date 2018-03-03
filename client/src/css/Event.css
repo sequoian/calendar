@@ -71,16 +71,13 @@
 .event-toggle {
   padding: 7px 10px;
   padding-left: 0;
-  /* vars */
-  --outer: #FCCF31;
-  --inner: #FCCF31;
 }
 
 .event-toggle button {
   -webkit-appearance: none;
   -moz-appearance: none;
   background-color: inherit;
-  border: 3px solid var(--outer);
+  border: 3px solid var(--font-color);
   border-radius: 5px;
   width: 21px;
   height: 21px;
@@ -92,7 +89,8 @@
 }
 
 .complete button {
-  background-color: var(--inner);
+  background-color: var(--grayed-out);
+  border-color: var(--grayed-out);
 }
 
 .event-toggle button:focus {

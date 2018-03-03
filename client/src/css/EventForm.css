@@ -7,14 +7,20 @@
 .event-form button {
   -webkit-appearance: none;
   -moz-appearance: none;
-  border: none;
+  border: 1px solid white;
   border-radius: 7px;
-  background-color: #008cff;
-  color: white;
+  background-color: #c7c7c7;
+  color: var(--font-color);
   font-size: 22px;
   padding: 5px 15px;
   cursor: pointer;
   margin-top: 10px;
+}
+
+.event-form button:hover,
+.event-form button:focus {
+  border: 1px solid black;
+  outline: none;
 }
 
 .err-msg {
