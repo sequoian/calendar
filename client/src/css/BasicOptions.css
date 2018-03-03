@@ -45,8 +45,4 @@ input[name="time"],
   input[name="time"] {
     margin-left: 20px;
   }
-
-  input[name="title"] {
-    margin-bottom: 30px;
-  }
 }

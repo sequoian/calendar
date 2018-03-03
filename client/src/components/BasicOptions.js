@@ -7,7 +7,7 @@ import '../css/BasicOptions.css'
 const BasicOptions = ({title, day, time, details, errors, onChange, onChangeDatePicker, onBlurTime}) => (
   <div className="basic-options">
     <div className={errors.title ? 'error' : null}>
-      <span>{errors.title}</span>
+      <span className="err-msg">{errors.title}</span>
       <input
         name="title"
         value={title}
@@ -17,13 +17,16 @@ const BasicOptions = ({title, day, time, details, errors, onChange, onChangeDate
       />
     </div>
     <div className="datetime">
-      <DatePicker
-        name="day"
-        selected={day}
-        dateFormat="MMM DD, YYYY"
-        onChange={onChangeDatePicker}
-        placeholderText="Day"
-      />
+      <div className={errors.day ? 'error' : null}>
+        <span className="err-msg">{errors.day}</span>
+        <DatePicker
+          name="day"
+          selected={day}
+          dateFormat="MMM DD, YYYY"
+          onChange={onChangeDatePicker}
+          placeholderText="Day"
+        />
+      </div>
       <input
         name="time" 
         value={time}

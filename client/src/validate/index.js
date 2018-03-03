@@ -3,6 +3,11 @@ const validateEvent = (event) => {
   if (event.title.trim() === '') {
     errors.title = 'Required'
   }
+
+  if (!event.day) {
+    errors.day = 'Valid day required'
+  }
+  
   return errors
 }
 

@@ -47,11 +47,21 @@ class EventForm extends Component {
     this.setState({
       [name]: value
     })
+    this.validateChanges()
   }
 
   setDatePicker(name, value) {
     this.setState({
       [name]: value
+    })
+    this.validateChanges()
+  }
+
+  validateChanges() {
+    this.setState(prevState => {
+      return {
+        errors: validate(prevState)
+      }
     })
   }
 
