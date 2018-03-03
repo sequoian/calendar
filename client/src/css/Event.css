@@ -14,11 +14,11 @@
 }
 
 .complete .event-info {
-  color: gray;
+  color: var(--grayed-out);
 }
 
 .event-info:hover {
-  background-color: lightgray;
+  background-color: #eaeaea
 }
 
 .title {

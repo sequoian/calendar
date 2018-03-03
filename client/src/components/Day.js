@@ -3,7 +3,6 @@ import moment from 'moment'
 import '../css/Day.css'
 import Event from './Event'
 
-
 const Day = ({events, onEventClick, onEventToggle, onHeaderClick}) => {
   const day = events[0].day
   const today = moment().startOf('day').valueOf()

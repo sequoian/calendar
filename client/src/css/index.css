@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600|Poiret+One');
 
 * {
   box-sizing: border-box;
@@ -6,4 +6,13 @@
 
 body, button {
   font-family: 'Open Sans', sans-serif;
+  color: var(--font-color)
+}
+
+/* global vars */
+
+body {
+  --font-color: black;
+  --border-color: #b5b5b5;
+  --grayed-out: #969696;
 }

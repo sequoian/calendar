@@ -1,5 +1,5 @@
 .day {
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid #b5b5b5;
   padding: 20px 15px;
 }
 
@@ -11,5 +11,5 @@
 }
 
 .day.past h2 {
-  color: gray;
+  color: var(--grayed-out);
 }
