@@ -5,9 +5,10 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import '../css/Header.css'
 import NewEventBtn from './NewEventBtn'
+import scrollToDay from '../scroll'
 
 const Header = ({selectedDay, onDayChange}) => (
-  <div className="header">
+  <div id="header">
     <h1>Calendar</h1>
     <DatePicker
       dateFormat="MMM DD, YYYY"
@@ -42,7 +43,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onDayChange: value => dispatch(changeDay(value))
+    onDayChange: value => {
+      dispatch(changeDay(value))
+      scrollToDay(value.startOf('day').valueOf())
+    }
   }
 }
 

@@ -11,7 +11,10 @@ const Day = ({events, onEventClick, onEventToggle, onHeaderClick}) => {
   else if (day === today) classes.push('today')
   const className = classes.join(' ').trim()
   return (
-    <div className={className}>
+    <div 
+      id={events[0].day}
+      className={className}
+    >
       <h2 onClick={e => onHeaderClick(day)}>
         {moment(day).format('dddd, MMMM DD, YYYY')}
       </h2>

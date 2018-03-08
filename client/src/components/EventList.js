@@ -72,10 +72,10 @@ const divideByDay = events => {
 const mapStateToProps = state => {
   const events = state.events.slice()
   const sorted = events.sort(sortByDay)
-  const filtered = sorted.filter(thisDayAndLater(state.calendar.selectedDay.valueOf()))
-  const divided = divideByDay(filtered)
+  //const filtered = sorted.filter(thisDayAndLater(state.calendar.selectedDay.valueOf()))
+  const divided = divideByDay(sorted)
   return {
-    events: filtered.length > 0 ? divided : filtered
+    events: sorted.length > 0 ? divided : sorted
   }
 }
 

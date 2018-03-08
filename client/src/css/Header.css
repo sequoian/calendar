@@ -1,4 +1,4 @@
-.header {
+#header {
   display: flex;
   position: fixed;
   width: 100%;
@@ -29,7 +29,7 @@ h1 {
 
 /* header button */
 
-.header button {
+#header button {
   -webkit-appearance: none;
   -moz-appearance: none;
   background-color: inherit;
@@ -44,17 +44,17 @@ h1 {
   font-weight: 300;
 }
 
-.header button:hover,
-.header button:focus {
+#header button:hover,
+#header button:focus {
   background-color: #dedede;
 }
 
-.header button:focus {
+#header button:focus {
   outline: none;
 }
 
 @media (min-width: 420px) {
-  .header button {
+  #header button {
     font-size: 1.2em;
     padding: 5px 15px;
   }
