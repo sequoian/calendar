@@ -3,24 +3,31 @@ import {connect} from 'react-redux'
 import {openEditor, toggleEvent} from '../actions'
 import '../css/EventList.css'
 import Day from './Day'
+import moment from 'moment'
 
 const EventList = ({events, onEventClick, onEventToggle, onDayClick}) => {
-  if (events.length < 1) return (
-    <div className="event-list empty">
-      <span>Nothing scheduled</span>
-    </div>
-  )
+  for (let i = 0; i < 7; i++) {
+    const day = moment().add(i, 'd').startOf('day').valueOf()
+    if (!events[day]) events[day] = []
+  }
+
+  const days = Object.keys(events).map(key => {
+    const day = events[key]
+    return (
+      <Day
+        key={key}
+        day={parseInt(key, 10)}
+        events={day}
+        onEventClick={onEventClick}
+        onEventToggle={onEventToggle}
+        onHeaderClick={onDayClick}
+      />
+    )
+  })
+
   return (
     <div className="event-list">
-      {events.map(eventsByDay => (
-        <Day
-          key={eventsByDay[0].day}
-          events={eventsByDay}
-          onEventClick={onEventClick}
-          onEventToggle={onEventToggle}
-          onHeaderClick={onDayClick}
-        />
-      ))}
+      {days}
     </div>
   )
 }
@@ -43,36 +50,17 @@ const sortByTime = (a, b) => {
   return 0
 }
 
-const thisDayAndLater = day => event => {
-  if (event.day >= day) return event
-}
-
 const divideByDay = events => {
-  let currentDay = null
-  let daysEvents = []
-  const days = []
+  const divided = {}
   events.forEach(event => {
-    if (currentDay === null) {
-      currentDay = event.day
-      daysEvents = [event]
-    }
-    else if (event.day !== currentDay) {
-      days.push(daysEvents)
-      currentDay = event.day
-      daysEvents = [event]
-    }
-    else {
-      daysEvents.push(event)
-    }
+    divided[event.day] ? divided[event.day].push(event) : divided[event.day] = [event]
   })
-  days.push(daysEvents)
-  return days
+  return divided
 }
 
 const mapStateToProps = state => {
   const events = state.events.slice()
   const sorted = events.sort(sortByDay)
-  //const filtered = sorted.filter(thisDayAndLater(state.calendar.selectedDay.valueOf()))
   const divided = divideByDay(sorted)
   return {
     events: sorted.length > 0 ? divided : sorted
