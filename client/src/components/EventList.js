@@ -6,12 +6,12 @@ import Day from './Day'
 import moment from 'moment'
 
 const EventList = ({events, onEventClick, onEventToggle, onDayClick}) => {
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 8; i++) {
     const day = moment().add(i, 'd').startOf('day').valueOf()
     if (!events[day]) events[day] = []
   }
 
-  const days = Object.keys(events).map(key => {
+  const days = Object.keys(events).sort().map(key => {
     const day = events[key]
     return (
       <Day

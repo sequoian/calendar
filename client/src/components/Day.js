@@ -15,7 +15,7 @@ const Day = ({day, events, onEventClick, onEventToggle, onHeaderClick}) => {
       className={className}
     >
       <h2 onClick={e => onHeaderClick(day)}>
-        {day === today ? 'Today' : moment(day).format('dddd, MMMM DD, YYYY')}
+        {moment(day).format('dddd, MMMM DD, YYYY')}
       </h2>
       <ul>
       {events.map(event => (
