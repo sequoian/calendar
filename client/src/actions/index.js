@@ -73,6 +73,6 @@ export const CHANGE_DAY = 'CHANGE_DAY'
 export const changeDay = day => {
   return {
     type: CHANGE_DAY,
-    day
+    day: day.startOf('day')
   }
 }

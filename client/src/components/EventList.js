@@ -1,35 +1,45 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {openEditor, toggleEvent} from '../actions'
 import '../css/EventList.css'
 import Day from './Day'
 import moment from 'moment'
+import scrollToDay from '../scroll'
 
-const EventList = ({events, onEventClick, onEventToggle, onDayClick}) => {
-  for (let i = 0; i < 8; i++) {
-    const day = moment().add(i, 'd').startOf('day').valueOf()
-    if (!events[day]) events[day] = []
+class EventList extends Component {
+  componentDidUpdate(prevProps) {
+    if (prevProps.selectedDay !== this.props.selectedDay) {
+      scrollToDay(this.props.selectedDay) 
+    }
   }
 
-  const days = Object.keys(events).sort().map(key => {
-    const day = events[key]
+  render() {
+    const {events, selectedDay, onEventClick, onEventToggle, onDayClick} = this.props
+    for (let i = 0; i < 8; i++) {
+      const day = moment(selectedDay).add(i, 'd').startOf('day').valueOf()
+      if (!events[day]) events[day] = []
+    }
+  
+    const days = Object.keys(events).sort().map(key => {
+      const day = events[key]
+      return (
+        <Day
+          key={key}
+          day={parseInt(key, 10)}
+          events={day}
+          onEventClick={onEventClick}
+          onEventToggle={onEventToggle}
+          onHeaderClick={onDayClick}
+        />
+      )
+    })
+  
     return (
-      <Day
-        key={key}
-        day={parseInt(key, 10)}
-        events={day}
-        onEventClick={onEventClick}
-        onEventToggle={onEventToggle}
-        onHeaderClick={onDayClick}
-      />
+      <div className="event-list">
+        {days}
+      </div>
     )
-  })
-
-  return (
-    <div className="event-list">
-      {days}
-    </div>
-  )
+  }
 }
 
 const sortByDay = (a, b) => {
@@ -63,7 +73,8 @@ const mapStateToProps = state => {
   const sorted = events.sort(sortByDay)
   const divided = divideByDay(sorted)
   return {
-    events: sorted.length > 0 ? divided : sorted
+    events: divided,
+    selectedDay: state.calendar.selectedDay.valueOf()
   }
 }
 

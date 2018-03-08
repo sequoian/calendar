@@ -9,7 +9,7 @@ const calendar = (state = defaultState, action) => {
   switch (action.type) {
     case CHANGE_DAY:
       return {
-        selectedDay: action.day.startOf('day')
+        selectedDay: action.day
       }
     default:
       return state
