@@ -6,10 +6,12 @@ import 'react-datepicker/dist/react-datepicker.css'
 import '../css/Header.css'
 import NewEventBtn from './NewEventBtn'
 import {scrollToDay} from '../scroll'
+import Nav from './Nav'
 
 const Header = ({selectedDay, onDayChange}) => (
   <div id="header">
     <h1>Calendar</h1>
+    <Nav />
     <DatePicker
       dateFormat="MMM DD, YYYY"
       customInput={<DatePickerInput />}

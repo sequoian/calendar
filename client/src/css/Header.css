@@ -3,14 +3,15 @@
   position: fixed;
   width: 100%;
   align-items: center;
-  padding: 0 15px;
+  padding: 0 5px;
   height: 70px;
   background-color: white;
   border-bottom: 1px solid var(--border-color);
+  --separation: 5px;
 }
 
 #calendar {
-  margin-right: 40px;
+  margin-right: var(--separation);
 }
 
 h1 {
@@ -22,9 +23,13 @@ h1 {
 
 @media (min-width: 675px) {
   h1 {
-    margin-right: 75px;
+    margin-right: var(--separation);
     display: block;
   }
+}
+
+.nav {
+  margin-right: var(--separation);
 }
 
 /* header button */
@@ -53,17 +58,10 @@ h1 {
   outline: none;
 }
 
-@media (min-width: 420px) {
-  #header button {
-    font-size: 1.2em;
-    padding: 5px 15px;
-  }
-}
-
 /* selection triangle */
 
 .select {
-  display: inline-block;
+  display: none;
   width: 0;
   height: 0;
   border-left: 6px solid transparent;
@@ -71,4 +69,20 @@ h1 {
   border-bottom: 6px solid transparent;
   border-top: 6px solid var(--font-color);
   margin-left: 15px;
+}
+
+@media (min-width: 490px) {
+  #header {
+    --separation: 35px;
+    padding: 0 15px;
+  }
+
+  #header button {
+    font-size: 1.1em;
+    padding: 5px 15px;
+  }
+
+  .select {
+    display: inline-block;
+  }
 }

@@ -76,3 +76,17 @@ export const changeDay = day => {
     day: day.startOf('day')
   }
 }
+
+export const NEXT_DAY = 'NEXT_DAY'
+export const nextDay = () => {
+  return {
+    type: NEXT_DAY
+  }
+}
+
+export const PREV_DAY = 'PREV_DAY'
+export const prevDay = () => {
+  return {
+    type: PREV_DAY
+  }
+}

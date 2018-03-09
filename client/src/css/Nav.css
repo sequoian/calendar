@@ -1,0 +1,31 @@
+.nav button {
+  margin: 0 5px;
+  background-color: inherit !important;
+}
+
+.nav button:hover {
+  background-color: #dedede !important;
+}
+
+.arrow {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+}
+
+.nav button:last-child {
+  padding: 0 10px 5px 8px !important;
+}
+
+.nav button:first-child {
+  padding: 0 8px 5px 10px !important;
+}
+
+.right {
+  transform: rotate(-45deg);
+}
+
+.left {
+  transform: rotate(135deg);
+}

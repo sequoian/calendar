@@ -15,7 +15,9 @@ class EventList extends Component {
 
   render() {
     const {events, selectedDay, onEventClick, onEventToggle, onDayClick} = this.props
-    for (let i = 0; i < 8; i++) {
+    // show the next x days whether or not they have any events
+    const daysToShow = 3
+    for (let i = 0; i < daysToShow; i++) {
       const day = moment(selectedDay).add(i, 'd').startOf('day').valueOf()
       if (!events[day]) events[day] = []
     }
@@ -68,13 +70,17 @@ const divideByDay = events => {
   return divided
 }
 
+const olderThan = day => event => event.day >= day
+
 const mapStateToProps = state => {
+  const selectedDay = state.calendar.selectedDay.valueOf()
   const events = state.events.slice()
-  const sorted = events.sort(sortByDay)
+  const filtered = state.calendar.showOlder ? events : events.filter(olderThan(selectedDay))
+  const sorted = filtered.sort(sortByDay)
   const divided = divideByDay(sorted)
   return {
     events: divided,
-    selectedDay: state.calendar.selectedDay.valueOf()
+    selectedDay
   }
 }
 
