@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import '../css/Header.css'
 import NewEventBtn from './NewEventBtn'
+import {scrollToDay} from '../scroll'
 
 const Header = ({selectedDay, onDayChange}) => (
   <div id="header">
@@ -15,6 +16,10 @@ const Header = ({selectedDay, onDayChange}) => (
       selected={selectedDay}
       onChange={onDayChange}
       todayButton={"Today"}
+      onSelect={value => {
+        value = value.startOf('day').valueOf()
+        if (value === selectedDay.valueOf()) scrollToDay(value)
+      }}
     />
     <NewEventBtn />
   </div>
@@ -32,7 +37,6 @@ class DatePickerInput extends Component {
     )
   }
 }
-
 
 const mapStateToProps = state => {
   return {

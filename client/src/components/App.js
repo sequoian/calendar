@@ -4,7 +4,7 @@ import Modal from './Modal'
 import EventList from './EventList'
 import Header from './Header'
 import '../css/App.css'
-import scrollToDay from '../scroll'
+import {scrollToDay} from '../scroll'
 import moment from 'moment'
 
 class App extends Component {

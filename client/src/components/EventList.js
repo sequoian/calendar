@@ -4,7 +4,7 @@ import {openEditor, toggleEvent} from '../actions'
 import '../css/EventList.css'
 import Day from './Day'
 import moment from 'moment'
-import scrollToDay from '../scroll'
+import {scrollToDay} from '../scroll'
 
 class EventList extends Component {
   componentDidUpdate(prevProps) {
