@@ -11,14 +11,14 @@ const formatTime = time => {
 
 export const ADD_EVENT = 'ADD_EVENT'
 export const addEvent = event => {
+  delete event.errors
   return {
     type: ADD_EVENT,
     event: {
       ...event,
       id: Date.now(),
-      completed: false,
       day: event.day.startOf('day').valueOf(),
-      endOn: event.endOn.valueOf(),
+      //endOn: event.endOn.valueOf(),
       time: formatTime(event.time) || ''
     }
   }
@@ -26,12 +26,13 @@ export const addEvent = event => {
 
 export const EDIT_EVENT = 'EDIT_EVENT'
 export const editEvent = event => {
+  delete event.errors
   return {
     type: EDIT_EVENT,
     event: {
       ...event,
       day: event.day.startOf('day').valueOf(),
-      endOn: event.endOn.valueOf(),
+      //endOn: event.endOn.valueOf(),
       time: formatTime(event.time) || ''
     }
   }

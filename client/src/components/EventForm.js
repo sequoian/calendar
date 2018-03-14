@@ -25,13 +25,14 @@ class EventForm extends Component {
       day: props.day ? moment(props.day) : moment(props.selectedDay),
       time: props.time ? moment(props.time).format('h:mma') : '',
       details: props.details || '',
-      repeats: props.repeats || 'no',
-      frequency: props.frequency || 1,
-      daysOfWeek: props.daysOfWeek || [0, 0, 0, 0, 0, 0, 0],
-      endOption: props.endOption || 'never',
-      endOn: props.endOn ? moment(props.endOn) : moment().add(1, 'M'),
-      endAfter: props.endAfter || 10,
-      showMore: false,
+      completed: props.completed || false,
+      // repeats: props.repeats || 'no',
+      // frequency: props.frequency || 1,
+      // daysOfWeek: props.daysOfWeek || [0, 0, 0, 0, 0, 0, 0],
+      // endOption: props.endOption || 'never',
+      // endOn: props.endOn ? moment(props.endOn) : moment().add(1, 'M'),
+      // endAfter: props.endAfter || 10,
+      // showMore: false,
       errors: {}
     }
     this.handleChange = this.handleChange.bind(this)
