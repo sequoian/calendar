@@ -7,19 +7,24 @@
 .event-form button {
   -webkit-appearance: none;
   -moz-appearance: none;
-  border: 1px solid white;
-  border-radius: 7px;
-  background-color: #c7c7c7;
+  background-color: inherit;
+  border: none;
+  cursor: default;
+  font-size: 1.3em;
+  padding: 5px 20px;
   color: var(--font-color);
-  font-size: 22px;
-  padding: 5px 15px;
+  background-color: #f5f5f5;
+  background-color: #dedede;
   cursor: pointer;
+  border-radius: 7px;
+  font-weight: 300;
   margin-top: 10px;
 }
 
 .event-form button:hover,
 .event-form button:focus {
-  border: 1px solid black;
+  background-color: #dedede;
+  background-color: #9c9c9c;
   outline: none;
 }
 
